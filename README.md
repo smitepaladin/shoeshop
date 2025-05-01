@@ -1,10 +1,20 @@
 # shoeshop
 
 기간 : 2025-05-01 ~ 2025-05-08
+
+
 발표방법 : PT와 동영상으로 해당 Part제작자가 발표 
+
+
 개발언어 : Dart, SQL
+
+
 Framework : Flutter
+
+
 Database : SQLite(Local Database를 사용함으로 팀원들이 DB정보를 따로 공유하여야 함)
+
+
 
 요건정의)
 1. 사용자는 엡을 사용하여 본사의 서버(가상)에 접속하여 신발을 구매할 수 있다.
