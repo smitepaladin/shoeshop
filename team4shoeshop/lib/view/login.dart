@@ -49,50 +49,53 @@ class _LoginState extends State<Login> {
       appBar: AppBar(
         title: Text('Log In'),
       ),
-      body: Center(
-        child: Column(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('images/login.png'),
-              radius: 70,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextField(
-                controller: userIdController,
-                decoration: InputDecoration(
-                  labelText: '사용자 ID를 입력하세요'
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Center(
+          child: Column(
+            children: [
+              CircleAvatar(
+                backgroundImage: AssetImage('images/login.png'),
+                radius: 70,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextField(
+                  controller: userIdController,
+                  decoration: InputDecoration(
+                    labelText: '사용자 ID를 입력하세요'
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: TextField(
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: '패스워드를 입력하세요'
+              Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: TextField(
+                  controller: passwordController,
+                  decoration: InputDecoration(
+                    labelText: '패스워드를 입력하세요'
+                  ),
                 ),
               ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                if(userIdController.text.trim().isEmpty || passwordController.text.trim().isEmpty){
-                  errorSnackBar();
-                }else{
-                  _showDialog();
-                }
-              }, 
-              child: Text('Log In'),
-            ),
-            ElevatedButton(
-              onPressed: () => Get.to(Joincustomer()), 
-              child: Text('회원가입'),
-            ),
-            ElevatedButton(
-              onPressed: () => Get.to(Adminlogin()), 
-              child: Text('관리자 페이지'),
-            ),
-          ],
+              ElevatedButton(
+                onPressed: () {
+                  if(userIdController.text.trim().isEmpty || passwordController.text.trim().isEmpty){
+                    errorSnackBar();
+                  }else{
+                    _showDialog();
+                  }
+                }, 
+                child: Text('Log In'),
+              ),
+              ElevatedButton(
+                onPressed: () => Get.to(Joincustomer()), 
+                child: Text('회원가입'),
+              ),
+              ElevatedButton(
+                onPressed: () => Get.to(Adminlogin()), 
+                child: Text('관리자 페이지'),
+              ),
+            ],
+          ),
         ),
       ),
     );
