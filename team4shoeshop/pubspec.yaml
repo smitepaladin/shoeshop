@@ -67,6 +67,9 @@ dependencies:
   
   #image_picker
   image_picker: ^1.1.2
+  
+  #syncfusion_flutter_charts
+  syncfusion_flutter_charts: ^29.1.38
 
 dev_dependencies:
   flutter_test:
@@ -91,8 +94,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+    - images/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
