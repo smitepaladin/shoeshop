@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:team4shoeshop/model/product.dart';
 
 class DatabaseHandler {
   Future<Database> initializeDB()async{
@@ -92,6 +93,12 @@ class DatabaseHandler {
     );
   }
 
-
+Future<List<Product>> getAllproducts() async{
+  final Database db = await initializeDB();
+  final List<Map<String, dynamic>> queryResult = await db. rawQuery(
+    'select * from product order by name'
+  );
+  return queryResult.map((e) => Product.fromMap(e)).toList();
+}
 
 }
