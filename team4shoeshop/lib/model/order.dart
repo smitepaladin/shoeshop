@@ -39,7 +39,7 @@ class Order{
   ocount = res['ocount'],
   odate = res['odate'],
   ostatus = res['ostatus'],
-  ocartbool = res['ocartbool'],
+  ocartbool = res['ocartbool'] == 1,
   oreturncount = res['oreturncount'],
   oreturndate = res['oreturndate'],
   oreturnstatus = res['oreturnstatus'],
