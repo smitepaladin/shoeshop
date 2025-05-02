@@ -53,8 +53,14 @@ dependencies:
   # Path
   path: ^1.9.1
 
+  # path_provider
+  path_provider: ^2.1.5
+
   #Getx
   get: ^4.7.2
+
+  #get storage
+  get_storage: ^2.1.1
 
   # Slider
   flutter_slidable: ^4.0.0
