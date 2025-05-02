@@ -67,7 +67,7 @@ class DatabaseHandler {
           // final bool ocartbool; // 장바구니 여부
           // final int oreturncount; // 반품수량
           // final String oreturndate; // 반품일
-          // final String oreturnstatus; // 반품 상태(반품, 제조사 발송)
+          // final String oreturnstatus; // 반품 상태(반품,제조사 발송)
           // final String odefectivereason; // 제조사 규명 하자 내용
           // final String oreason; // 반품 이유
 
