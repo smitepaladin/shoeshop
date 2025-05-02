@@ -1,5 +1,6 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:team4shoeshop/model/customer.dart';
 import 'package:team4shoeshop/model/product.dart';
 
 class DatabaseHandler {
@@ -93,7 +94,17 @@ class DatabaseHandler {
     );
   }
 
-Future<List<Product>> getAllproducts() async{
+    // 회원가입 페이지에서 받은 정보 customer table에 넣기
+    Future<int> insertJoin(Customer customer) async{
+    int result = 0;
+    final Database db = await initializeDB();
+    result = await db.rawInsert(
+      'insert into customer(cid, cname, cpassword, cphone, cemail, caddress) values (?,?,?,?,?,?)',
+      [customer.cid, customer.cname, customer.cpassword, customer.cphone, customer.cemail, customer.caddress]
+    );
+    return result;
+
+  }Future<List<Product>> getAllproducts() async{
   final Database db = await initializeDB();
   final List<Map<String, dynamic>> queryResult = await db. rawQuery(
     'select * from product order by name'
