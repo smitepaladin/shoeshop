@@ -1,7 +1,7 @@
 class Factory{
-  final String fid;
-  final String fbrand;
-  final String fphone;
+    final String fid; //  제조사 ID
+    final String fbrand; // 제조사 브랜드
+    final String fphone; // 제조사 전화번호
 
 
   Factory({
