@@ -1,6 +1,8 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/customer.dart';
+import 'package:team4shoeshop/model/order.dart';
+import 'package:team4shoeshop/model/product.dart';
 
 class DatabaseHandler {
   Future<Database> initializeDB()async{
@@ -91,7 +93,38 @@ class DatabaseHandler {
       },
       version: 1,
     );
+  } // Database
+
+// 로그인 시 나오는 첫 화면
+Future<List<Product>> getAllproducts() async{
+  final Database db = await initializeDB();
+  final List<Map<String, dynamic>> queryResult = await db. rawQuery(
+    'select * from product order by name'
+  );
+  return queryResult.map((e) => Product.fromMap(e)).toList();
+}
+
+// 드로우바 내 결제내역 페이지
+Future<List<Order>> getAllorders() async{
+  final Database db = await initializeDB();
+  final List<Map<String, dynamic>> queryResult = await db.rawQuery(
+    'select*from product where order order by odate'
+  );
+  return queryResult.map((e) =>  Order.fromMap(e)).toList();
+}
+
+// 주문의 상품 db로 상품 상세 정보 가지고 오기(주문내역에서 필요요)
+Future<Product?> getProductByPid(String pid) async {
+  final Database db = await initializeDB();
+  final List<Map<String, dynamic>> queryResult = await db.rawQuery(
+    'select*from product where pid=?',
+    [pid]
+  );
+  if (queryResult.isNotEmpty) {
+    return Product.fromMap(queryResult.first);
   }
+  return null;
+}
 
     // 회원가입 페이지에서 받은 정보 customer table에 넣기
     Future<int> insertJoin(Customer customer) async{
@@ -103,5 +136,7 @@ class DatabaseHandler {
     );
     return result;
   }
+
+
 
 }

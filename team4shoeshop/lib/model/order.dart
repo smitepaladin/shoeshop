@@ -1,13 +1,13 @@
 class Order{
 
-    final int? oid; // 주분번호 autoincrement
+    final int? oid; // 주문번호 autoincrement
     final String ocid; // 고객 ID
     final String opid; // 신발 ID
     final String oeid; // 직원 ID
     final int ocount; // 주문수량
     final String odate; // 주문일자
     final String ostatus; // 상품 상태(발송 도착 수령)
-    final bool ocartbool; // 장바구니 여부
+    final bool ocartbool; // 장바구니 여부 (0: 장바구니 미등록, 1: 장바구니 등록)
     final int oreturncount; // 반품수량
     final String oreturndate; // 반품일
     final String oreturnstatus; // 반품 상태(반품, 제조사 발송)

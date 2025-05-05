@@ -193,3 +193,7 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/flutter,macos,dart,android,windows
+team4shoeshop/lib/view/shoes_list_page.dart
+team4shoeshop/lib/vm/database_handler.dart
+team4shoeshop/lib/vm/product_controller.dart
+team4shoeshop/lib/vm/database_handler.dart
