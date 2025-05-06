@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:team4shoeshop/model/order.dart';
+import 'package:team4shoeshop/model/orders.dart';
 import 'package:team4shoeshop/model/product.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
@@ -55,7 +55,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
             padding: const EdgeInsets.all(16),
             itemCount: orderList.length,
             itemBuilder: (context, index) {
-              final order = orderList[index]['order'] as Order; // 주문 정보
+              final order = orderList[index]['order'] as Orders; // 주문 정보
               final product = orderList[index]['product'] as Product; // 상품 정보
               final isCompleted = order.ostatus == '고객수령완료'; // 주문 상태 체크
               return Container(

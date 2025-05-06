@@ -217,7 +217,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                               SizedBox(height: 8),
                               Text(product.pname, style: TextStyle(fontWeight: FontWeight.bold)),
                               Text('가격: ${product.pprice}원'),
-                              Text('색깔: ${product.pcolor}'),
+                              Text('색상: ${product.pcolor}'),
                             ],
                           ),
                         ),
