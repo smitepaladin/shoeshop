@@ -97,7 +97,6 @@ class DatabaseHandler {
           // final String odefectivereason; // 제조사 규명 하자 내용
           // final String oreason; // 반품 이유
 
-        // ✅ orders 테이블 (order → orders)
         await db.execute(
         "create table order(oid integer primary key autoincrement, ocid text, opid text, oeid text, ocount integer, odate text, ostatus text, ocartbool integer, oreturncount integer, oreturndate text, oreturnstatus text, odefectivereason text, oreason text)");
 
