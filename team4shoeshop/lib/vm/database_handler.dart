@@ -99,11 +99,11 @@ class DatabaseHandler {
 
         // ✅ orders 테이블 (order → orders)
         await db.execute(
-        "create table order(oid integer primary key autoincrement, ocid text, opid text, oeid text, ocount integer, odate text, ostatus text, ocartbool integer, oreturncount integer, oreturndate text, oreturnstatus text, odefectivereason text, oreason text)");
+        "create table orders(oid integer primary key autoincrement, ocid text, opid text, oeid text, ocount integer, odate text, ostatus text, ocartbool integer, oreturncount integer, oreturndate text, oreturnstatus text, odefectivereason text, oreason text)");
 
         // order 초기 데이터
         // 전월 주문 - 4월
-        await db.insert('"order"', {
+        await db.insert('orders', {
           'ocid': 'cust001',
           'opid': 'prd001', // 에어맥스
           'oeid': 'emp001', // 김사원
@@ -118,7 +118,7 @@ class DatabaseHandler {
           'oreason': ''
         });
 
-        await db.insert('"order"', {
+        await db.insert('orders', {
           'ocid': 'cust001',
           'opid': 'prd002', // 울트라부스트
           'oeid': 'emp002', // 박팀장
@@ -134,7 +134,7 @@ class DatabaseHandler {
         });
 
         // 당월 주문 - 5월
-        await db.insert('"order"', {
+        await db.insert('orders', {
           'ocid': 'cust001',
           'opid': 'prd003', // 990v5
           'oeid': 'emp001',
@@ -149,7 +149,7 @@ class DatabaseHandler {
           'oreason': ''
         });
 
-        await db.insert('"order"', {
+        await db.insert('orders', {
           'ocid': 'cust001',
           'opid': 'prd004', // 척테일러
           'oeid': 'emp003', // 이이사
