@@ -45,7 +45,7 @@ class DatabaseHandler {
 
         // employee 테이블
         await db.execute(
-          "create table employee(eid text primary key, ename text, epassword text, epermission integer, elatdate real, elongdata real)",
+          "create table employee(eid text primary key, ename text, epassword text, epermission integer, elatdata real, elongdata real)",
         );
 
         // factory 테이블
@@ -244,7 +244,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '강남구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5172,
+        'elatdata': 37.5172,
         'elongdata': 127.0473,
       });
       await db.insert('employee', {
@@ -252,7 +252,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '강동구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5302,
+        'elatdata': 37.5302,
         'elongdata': 127.1238,
       });
       await db.insert('employee', {
@@ -260,7 +260,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '강북구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.6396,
+        'elatdata': 37.6396,
         'elongdata': 127.0256,
       });
       await db.insert('employee', {
@@ -268,7 +268,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '강서구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5509,
+        'elatdata': 37.5509,
         'elongdata': 126.8495,
       });
       await db.insert('employee', {
@@ -276,7 +276,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '관악구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.4784,
+        'elatdata': 37.4784,
         'elongdata': 126.9516,
       });
       await db.insert('employee', {
@@ -284,7 +284,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '광진구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5384,
+        'elatdata': 37.5384,
         'elongdata': 127.0823,
       });
       await db.insert('employee', {
@@ -292,7 +292,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '구로구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.4954,
+        'elatdata': 37.4954,
         'elongdata': 126.8874,
       });
       await db.insert('employee', {
@@ -300,7 +300,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '금천구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.4568,
+        'elatdata': 37.4568,
         'elongdata': 126.8950,
       });
       await db.insert('employee', {
@@ -308,7 +308,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '노원구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.6542,
+        'elatdata': 37.6542,
         'elongdata': 127.0568,
       });
       await db.insert('employee', {
@@ -316,7 +316,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '도봉구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.6688,
+        'elatdata': 37.6688,
         'elongdata': 127.0472,
       });
       await db.insert('employee', {
@@ -324,7 +324,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '동대문구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5744,
+        'elatdata': 37.5744,
         'elongdata': 127.0396,
       });
       await db.insert('employee', {
@@ -332,7 +332,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '동작구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5124,
+        'elatdata': 37.5124,
         'elongdata': 126.9392,
       });
       await db.insert('employee', {
@@ -340,7 +340,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '마포구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5663,
+        'elatdata': 37.5663,
         'elongdata': 126.9014,
       });
       await db.insert('employee', {
@@ -348,7 +348,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '서대문구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5791,
+        'elatdata': 37.5791,
         'elongdata': 126.9368,
       });
       await db.insert('employee', {
@@ -356,7 +356,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '서초구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.4836,
+        'elatdata': 37.4836,
         'elongdata': 127.0327,
       });
       await db.insert('employee', {
@@ -364,7 +364,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '성동구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5633,
+        'elatdata': 37.5633,
         'elongdata': 127.0364,
       });
       await db.insert('employee', {
@@ -372,7 +372,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '성북구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5894,
+        'elatdata': 37.5894,
         'elongdata': 127.0167,
       });
       await db.insert('employee', {
@@ -380,7 +380,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '송파구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5145,
+        'elatdata': 37.5145,
         'elongdata': 127.1059,
       });
       await db.insert('employee', {
@@ -388,7 +388,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '양천구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5169,
+        'elatdata': 37.5169,
         'elongdata': 126.8666,
       });
       await db.insert('employee', {
@@ -396,7 +396,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '영등포구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5263,
+        'elatdata': 37.5263,
         'elongdata': 126.8962,
       });
       await db.insert('employee', {
@@ -404,7 +404,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '용산구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5323,
+        'elatdata': 37.5323,
         'elongdata': 126.9909,
       });
       await db.insert('employee', {
@@ -412,7 +412,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '은평구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.6027,
+        'elatdata': 37.6027,
         'elongdata': 126.9291,
       });
       await db.insert('employee', {
@@ -420,7 +420,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '종로구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5729,
+        'elatdata': 37.5729,
         'elongdata': 126.9794,
       });
       await db.insert('employee', {
@@ -428,7 +428,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '중구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5636,
+        'elatdata': 37.5636,
         'elongdata': 126.9972,
       });
       await db.insert('employee', {
@@ -436,7 +436,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '중랑구',
         'epassword': '1234',
         'epermission': 0,
-        'elatdate': 37.5985,
+        'elatdata': 37.5985,
         'elongdata': 127.0928,
       });
 
@@ -446,7 +446,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '본사사원',
         'epassword': '1234',
         'epermission': 1,
-        'elatdate': null,
+        'elatdata': null,
         'elongdata': null,
       });
       await db.insert('employee', {
@@ -454,7 +454,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '본사팀장',
         'epassword': '1234',
         'epermission': 2,
-        'elatdate': null,
+        'elatdata': null,
         'elongdata': null,
       });
       await db.insert('employee', {
@@ -462,7 +462,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
         'ename': '본사임원',
         'epassword': '1234',
         'epermission': 3,
-        'elatdate': null,
+        'elatdata': null,
         'elongdata': null,
       });
     }

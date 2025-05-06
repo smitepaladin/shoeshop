@@ -13,6 +13,8 @@ void main() async {
   await handler.insertDefaultProductsIfEmpty(); // 샘플 상품 자동 삽입
   await handler.insertDefaultEmployeesIfEmpty(); // 샘플 emplyee 데이터 삽입.
   await handler.insertDefaultFactoriesIfEmpty(); // 샘플 factory 데이터 삽입.
+  // await handler.insertDefaultOrdersIfEmpty();
+  // await handler.insertDefaultApprovalsIfEmpty();
   runApp(const MyApp());
 }
 

@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/model/product.dart';
 import 'package:team4shoeshop/view/edit_profile_page.dart';
+import 'package:team4shoeshop/view/location_search.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:team4shoeshop/view/shoes_detail_page.dart';
 import 'package:team4shoeshop/view/orderviewpage.dart';
@@ -55,7 +56,7 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(Icons.location_on),
             title: Text('위치 검색'),
             onTap: () {
-              // Get.to(() => LocationSearchPage());
+              Get.to(() => LocationSearch());
             },
           ),
           ListTile(

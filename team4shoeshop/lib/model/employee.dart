@@ -17,11 +17,14 @@ class Employee{
     }
   );
 
-  Employee.fromMap(Map<String, dynamic> res)
-  : eid = res['eid'],
-  ename = res['ename'],
-  epassword = res['epassword'],
-  epermission = res['epermission'],
-  elatdata = res['elatdata'],
-  elongdata = res['elongdata'];
+factory Employee.fromMap(Map<String, dynamic> map) {
+  return Employee(
+    eid: map['eid'],
+    ename: map['ename'],
+    epassword: map['epassword'],
+    epermission: map['epermission'],
+    elatdata: map['elatdata'] != null ? map['elatdata'].toDouble() : 0.0,
+    elongdata: map['elongdata'] != null ? map['elongdata'].toDouble() : 0.0,
+  );
+}
 }
