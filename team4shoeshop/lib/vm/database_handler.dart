@@ -1,142 +1,137 @@
+import 'dart:typed_data';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/customer.dart';
-import 'package:team4shoeshop/model/order.dart';
+import 'package:team4shoeshop/model/orders.dart';
 import 'package:team4shoeshop/model/product.dart';
 
 class DatabaseHandler {
-  Future<Database> initializeDB()async{
+  Future<Database> initializeDB() async {
     String path = await getDatabasesPath();
     return openDatabase(
       join(path, 'shoeshop.db'),
-      onCreate: (db, version) async{
-
+      onCreate: (db, version) async {
         // approval 테이블
-        // final int? aid; // 품의번호 autoincrement
-        // final String aeid; // 직원ID
-        // final String afid; // 제조사ID
-        // final int abaljoo; // 발주량
-        // final int asoojoo; // 수주량
-        // final String astatus; // 품의상태
-        // final String adate; // 품의 요청일
-        // final String ateamappdate; // 팀장 결재일
-        // final String achiefappdate; // 임원 결재일
-
         await db.execute(
-        "create table approval(aid integer primary key autoincrement, aeid text, afid text, abaljoo integer, asoojoo integer, astatus text, adate text, ateamappdate text, achiefappdate text)");
+          "create table approval(aid integer primary key autoincrement, aeid text, afid text, abaljoo integer, asoojoo integer, astatus text, adate text, ateamappdate text, achiefappdate text)",
+        );
 
-          //customer 테이블
-          // final int? id; // 고객 테이블 기본 id autoincrement
-          // final String cid; // 고객 id
-          // final String cname; // 고객 이름
-          // final String cpassword; // 고객 비밀번호
-          // final String cphone; // 고객 전화번호
-          // final String cemail; // 고객 이메일
-          // final String caddress; // 고객 주소(실시간주소 아님)
-          // final int ccardnum; // 고객 카드번호
-          // final int ccardcvc; // 고객 CVC번호
-          // final int ccarddate; // 고객 카드 유효기간
-
+        // customer 테이블
         await db.execute(
-        "create table customer(id integer primary key autoincrement, cid text, cname text, cpassword text, cphone text, cemail text, caddress text, ccardnum integer, ccardcvc integer, ccarddate integer)");
+          "create table customer(id integer primary key autoincrement, cid text, cname text, cpassword text, cphone text, cemail text, caddress text, ccardnum integer, ccardcvc integer, ccarddate integer)",
+        );
 
-          // employee 테이블
-          // final String eid; // 직원 ID
-          // final String ename; // 직원 이름
-          // final String epassword; // 직원 비밀번호
-          // final int epermission; // 직원 직위(0대리점주, 1사원, 2팀장, 3임원)
-          // final double elatdata; // 대리점 위도
-          // final double elongdata; // 대리점 경도
-
+        // employee 테이블
         await db.execute(
-        "create table employee(eid text primary key, ename text, epassword text, epermission integer, elatdate real, elongdata real)");
-          
-          // factory 테이블
-          // final String fid; //  제조사 ID
-          // final String fbrand; // 제조사 브랜드
-          // final String fphone; // 제조사 전화번호
+          "create table employee(eid text primary key, ename text, epassword text, epermission integer, elatdate real, elongdata real)",
+        );
 
+        // factory 테이블
         await db.execute(
-        "create table factory(fid text primary key, fbrand text, fphone text)");
-          
-          // order 테이블
-          // final int? oid; // 주분번호 autoincrement
-          // final String ocid; // 고객 ID
-          // final String opid; // 신발 ID
-          // final String oeid; // 직원 ID
-          // final int ocount; // 주문수량
-          // final String odate; // 주문일자
-          // final String ostatus; // 상품 상태(발송 도착 수령)
-          // final bool ocartbool; // 장바구니 여부
-          // final int oreturncount; // 반품수량
-          // final String oreturndate; // 반품일
-          // final String oreturnstatus; // 반품 상태(반품,제조사 발송)
-          // final String odefectivereason; // 제조사 규명 하자 내용
-          // final String oreason; // 반품 이유
+          "create table factory(fid text primary key, fbrand text, fphone text)",
+        );
 
+        // ✅ orders 테이블 (order → orders)
         await db.execute(
-        "create table order(oid integer primary key autoincrement, ocid text, opid text, oeid text, ocount integer, odate text, ostatus text, ocartbool integer, oreturncount integer, oreturndate text, oreturnstatus text, odefectivereason text, oreason text)");
+          "create table orders(oid integer primary key autoincrement, ocid text, opid text, oeid text, ocount integer, odate text, ostatus text, ocartbool integer, oreturncount integer, oreturndate text, oreturnstatus text, odefectivereason text, oreason text)",
+        );
 
-          // product 테이블
-          // final int? id; // 신발 테이블 기본 id autoincrement
-          // final String pid; // 신발 ID
-          // final String pbrand; // 제품 브랜드
-          // final String pname; // 제품 이름
-          // final int psize; // 사이즈
-          // final String pcolor; // 색상
-          // final int pstock; // 재고
-          // final int pprice; // 가격
-          // final Uint8List pimage; // 이미지
-
+        // product 테이블
         await db.execute(
-        "create table product(id integer primary key autoincrement, pid text, pbrand text, pname text, psize integer, pcolor text, pstock integer, pprice integer, pimage blob)");
+          "create table product(id integer primary key autoincrement, pid text, pbrand text, pname text, psize integer, pcolor text, pstock integer, pprice integer, pimage blob)",
+        );
       },
       version: 1,
     );
-  } // Database
-
-// 로그인 시 나오는 첫 화면
-Future<List<Product>> getAllproducts() async{
-  final Database db = await initializeDB();
-  final List<Map<String, dynamic>> queryResult = await db. rawQuery(
-    'select * from product order by name'
-  );
-  return queryResult.map((e) => Product.fromMap(e)).toList();
-}
-
-// 드로우바 내 결제내역 페이지
-Future<List<Order>> getAllorders() async{
-  final Database db = await initializeDB();
-  final List<Map<String, dynamic>> queryResult = await db.rawQuery(
-    'select*from product where order order by odate'
-  );
-  return queryResult.map((e) =>  Order.fromMap(e)).toList();
-}
-
-// 주문의 상품 db로 상품 상세 정보 가지고 오기(주문내역에서 필요요)
-Future<Product?> getProductByPid(String pid) async {
-  final Database db = await initializeDB();
-  final List<Map<String, dynamic>> queryResult = await db.rawQuery(
-    'select*from product where pid=?',
-    [pid]
-  );
-  if (queryResult.isNotEmpty) {
-    return Product.fromMap(queryResult.first);
   }
-  return null;
-}
 
-    // 회원가입 페이지에서 받은 정보 customer table에 넣기
-    Future<int> insertJoin(Customer customer) async{
-    int result = 0;
+  // 로그인 시 나오는 첫 화면: 상품 전체 조회
+  Future<List<Product>> getAllproducts() async {
     final Database db = await initializeDB();
-    result = await db.rawInsert(
-      'insert into customer(cid, cname, cpassword, cphone, cemail, caddress) values (?,?,?,?,?,?)',
-      [customer.cid, customer.cname, customer.cpassword, customer.cphone, customer.cemail, customer.caddress]
+    final List<Map<String, dynamic>> queryResult = await db.rawQuery(
+      'select * from product order by pname',
     );
-    return result;
+    return queryResult.map((e) => Product.fromMap(e)).toList();
   }
 
+  // Product에 임시 데이터 2개 넣기
+  Future<void> insertDefaultProductsIfEmpty() async {
+  final db = await initializeDB();
+  final existing = await db.query('product');
 
+  if (existing.isEmpty) {
+    Uint8List emptyImage = Uint8List(0); // 빈 이미지
 
+    await db.insert('product', {
+      'pid': 'SH001',
+      'pbrand': 'Nike',
+      'pname': 'Air Max 90',
+      'psize': 270,
+      'pcolor': 'Black',
+      'pstock': 100,
+      'pprice': 129000,
+      'pimage': emptyImage,
+    });
+
+    await db.insert('product', {
+      'pid': 'SH002',
+      'pbrand': 'Adidas',
+      'pname': 'Ultra Boost',
+      'psize': 275,
+      'pcolor': 'White',
+      'pstock': 100,
+      'pprice': 159000,
+      'pimage': emptyImage,
+    });
+  }
+}
+
+  // 결제 내역 페이지 (orders 테이블 조회)
+  Future<List<Orders>> getAllorders() async {
+    final Database db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.rawQuery(
+      'select * from orders order by odate',
+    );
+    return queryResult.map((e) => Orders.fromMap(e)).toList();
+  }
+
+  // 주문된 상품 ID로 상품 정보 조회
+  Future<Product?> getProductByPid(String pid) async {
+    final Database db = await initializeDB();
+    final List<Map<String, dynamic>> queryResult = await db.rawQuery(
+      'select * from product where pid=?',
+      [pid],
+    );
+    if (queryResult.isNotEmpty) {
+      return Product.fromMap(queryResult.first);
+    }
+    return null;
+  }
+
+  // 회원가입 정보 insert
+  Future<int> insertJoin(Customer customer) async {
+    final Database db = await initializeDB();
+    return await db.insert('customer', {
+      'cid': customer.cid,
+      'cname': customer.cname,
+      'cpassword': customer.cpassword,
+      'cphone': customer.cphone,
+      'cemail': customer.cemail,
+      'caddress': customer.caddress,
+      'ccardnum': customer.ccardnum,
+      'ccardcvc': customer.ccardcvc,
+      'ccarddate': customer.ccarddate,
+    }, conflictAlgorithm: ConflictAlgorithm.replace);
+  }
+
+  // 로그인 확인용 메서드 추가
+  Future<bool> checkLogin(String cid, String password) async {
+    final db = await initializeDB();
+    final List<Map<String, dynamic>> result = await db.rawQuery(
+      'SELECT * FROM customer WHERE cid = ? AND cpassword = ?',
+      [cid, password],
+    );
+    return result.isNotEmpty;
+  }
 }
