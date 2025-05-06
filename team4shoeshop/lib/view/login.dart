@@ -36,7 +36,6 @@ class _LoginState extends State<Login> {
 
   @override
   void dispose() {
-    disposeStorage(); // 앱 종료할 때 지우기
     super.dispose();
   }
 
@@ -105,7 +104,7 @@ class _LoginState extends State<Login> {
                 child: Text('회원가입'),
               ),
               ElevatedButton(
-                onPressed: () => Get.off(Adminlogin()), 
+                onPressed: () => Get.off(Adminlogin()),
                 child: Text('관리자 페이지'),
               ),
             ],
@@ -136,9 +135,9 @@ class _LoginState extends State<Login> {
       actions: [
         TextButton(
           onPressed: () {
-            Get.back(); // 다이얼로그 지우기
-            saveStorage(); // Id, Password 저장
-            Get.to(Shoeslistpage()); // 화면 이동
+            saveStorage(); // ✅ 먼저 저장
+            Get.back(); // 다이얼로그 닫기
+            Get.to(() => Shoeslistpage()); // 그 다음 화면 이동
           },
           child: Text('Exit'),
         ),

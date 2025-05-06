@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/model/product.dart';
+import 'package:team4shoeshop/view/edit_profile_page.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:team4shoeshop/view/shoes_detail_page.dart';
 import 'package:team4shoeshop/view/orderviewpage.dart';
@@ -20,9 +21,7 @@ class MainDrawer extends StatelessWidget {
           UserAccountsDrawerHeader(
             accountName: Text(userId.isNotEmpty ? userId : '로그인 필요'),
             accountEmail: null,
-            currentAccountPicture: CircleAvatar(
-              child: Icon(Icons.person),
-            ),
+            currentAccountPicture: CircleAvatar(child: Icon(Icons.person)),
           ),
           ListTile(
             leading: Icon(Icons.shopping_bag),
@@ -35,7 +34,7 @@ class MainDrawer extends StatelessWidget {
             leading: Icon(Icons.person_outline),
             title: Text('회원정보 수정'),
             onTap: () {
-              // Get.to(() => EditProfilePage());
+              Get.to(() => EditProfilePage());
             },
           ),
           ListTile(
@@ -45,13 +44,6 @@ class MainDrawer extends StatelessWidget {
               Get.to(() => OrderViewPage());
             },
           ),
-          // ListTile(
-          //   leading: Icon(Icons.verified),
-          //   title: Text('결제 확인'),
-          //   onTap: () {
-          //     // Get.to(() => PaymentConfirmPage());
-          //   },
-          // ),
           ListTile(
             leading: Icon(Icons.shopping_cart),
             title: Text('장바구니'),
@@ -109,7 +101,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     _searchText = '';
   }
 
-// 드로우바 다른데서도 사용가능한 위젯으로 만듬 drawer: MainDrawer()
+  // 드로우바 다른데서도 사용가능한 위젯으로 만듬 drawer: MainDrawer()
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,7 +136,10 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
               ),
               onChanged: (query) {
                 _searchText = query;
-                _filteredProducts = _products.where((p) => p.pname.contains(_searchText)).toList();
+                _filteredProducts =
+                    _products
+                        .where((p) => p.pname.contains(_searchText))
+                        .toList();
                 setState(() {});
               },
             ),
@@ -164,9 +159,12 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                 // 최초 데이터 세팅, 검색창 비어있음 모든 목록 검색어 있음 해당 검색어 있는 목록
                 if (_products.isEmpty) {
                   _products = snapshot.data!;
-                  _filteredProducts = _searchText.isEmpty
-                      ? _products
-                      : _products.where((p) => p.pname.contains(_searchText)).toList();
+                  _filteredProducts =
+                      _searchText.isEmpty
+                          ? _products
+                          : _products
+                              .where((p) => p.pname.contains(_searchText))
+                              .toList();
                 }
                 // 상품 이미지 그리드뷰뷰
                 return GridView.builder(
@@ -194,28 +192,34 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                           child: Column(
                             children: [
                               Expanded(
-                                child: product.pimage.isNotEmpty
-                                    ? ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.memory(
-                                          product.pimage,
-                                          fit: BoxFit.cover,
-                                          width: double.infinity,
-                                        ),
-                                      )
-                                    : Container(
-                                        color: Colors.pink[100],
-                                        child: Center(
-                                          child: Text(
-                                            '신발\n이미지',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(fontSize: 16),
+                                child:
+                                    product.pimage.isNotEmpty
+                                        ? ClipRRect(
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                          child: Image.memory(
+                                            product.pimage,
+                                            fit: BoxFit.cover,
+                                            width: double.infinity,
+                                          ),
+                                        )
+                                        : Container(
+                                          color: Colors.pink[100],
+                                          child: Center(
+                                            child: Text(
+                                              '신발\n이미지',
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(fontSize: 16),
+                                            ),
                                           ),
                                         ),
-                                      ),
                               ),
                               SizedBox(height: 8),
-                              Text(product.pname, style: TextStyle(fontWeight: FontWeight.bold)),
+                              Text(
+                                product.pname,
+                                style: TextStyle(fontWeight: FontWeight.bold),
+                              ),
                               Text('가격: ${product.pprice}원'),
                               Text('색상: ${product.pcolor}'),
                             ],

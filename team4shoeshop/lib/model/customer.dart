@@ -35,5 +35,5 @@ class Customer{
   caddress = res['caddress'],
   ccardnum = res['ccardnum'],
   ccardcvc = res['ccardcvc'],
-  ccarddate = res['ccardate'];
+  ccarddate = res['ccarddate'];
 }

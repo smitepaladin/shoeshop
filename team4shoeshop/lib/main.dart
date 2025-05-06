@@ -9,11 +9,14 @@ void main() async {
 
   // DB 초기화 및 기본 상품 샘플 등록
   final handler = DatabaseHandler();
-  await handler.initializeDB(); // DB 초기화
-  await handler.insertDefaultProductsIfEmpty(); // 기본 상품 데이터 삽입
-  
+  await handler.initializeDB();
+  await handler.insertDefaultProductsIfEmpty(); // 샘플 상품 자동 삽입
+  await handler.insertDefaultEmployeesIfEmpty(); // 샘플 emplyee 데이터 삽입.
+  await handler.insertDefaultFactoriesIfEmpty(); // 샘플 factory 데이터 삽입.
   runApp(const MyApp());
 }
+
+
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
