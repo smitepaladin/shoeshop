@@ -251,35 +251,69 @@ class DatabaseHandler {
 
   // Product에 임시 데이터 2개 넣기
   Future<void> insertDefaultProductsIfEmpty() async {
-  final db = await initializeDB();
-  final existing = await db.query('product');
-
-  if (existing.isEmpty) {
+    final db = await initializeDB();
+    
+    // 기존 데이터 삭제
+    await db.delete('product');
+    
     Uint8List emptyImage = Uint8List(0); // 빈 이미지
 
+    // 기본 상품 데이터 삽입
     await db.insert('product', {
-      'pid': 'SH001',
-      'pbrand': 'Nike',
-      'pname': 'Air Max 90',
+      'pid': 'prd001',
+      'pbrand': '나이키',
+      'pname': '에어맥스',
       'psize': 270,
-      'pcolor': 'Black',
-      'pstock': 100,
+      'pcolor': '검정',
+      'pstock': 50,
       'pprice': 129000,
-      'pimage': emptyImage,
+      'pimage': emptyImage
     });
 
     await db.insert('product', {
-      'pid': 'SH002',
-      'pbrand': 'Adidas',
-      'pname': 'Ultra Boost',
-      'psize': 275,
-      'pcolor': 'White',
-      'pstock': 100,
+      'pid': 'prd002',
+      'pbrand': '아디다스',
+      'pname': '울트라부스트',
+      'psize': 265,
+      'pcolor': '흰색',
+      'pstock': 30,
+      'pprice': 139000,
+      'pimage': emptyImage
+    });
+
+    await db.insert('product', {
+      'pid': 'prd003',
+      'pbrand': '뉴발란스',
+      'pname': '990v5',
+      'psize': 280,
+      'pcolor': '회색',
+      'pstock': 40,
       'pprice': 159000,
-      'pimage': emptyImage,
+      'pimage': emptyImage
+    });
+
+    await db.insert('product', {
+      'pid': 'prd004',
+      'pbrand': '컨버스',
+      'pname': '척테일러',
+      'psize': 260,
+      'pcolor': '빨강',
+      'pstock': 60,
+      'pprice': 69000,
+      'pimage': emptyImage
+    });
+
+    await db.insert('product', {
+      'pid': 'prd005',
+      'pbrand': '리복',
+      'pname': '클래식레더',
+      'psize': 275,
+      'pcolor': '네이비',
+      'pstock': 35,
+      'pprice': 99000,
+      'pimage': emptyImage
     });
   }
-}
 
 
 //employee에 28개 데이터 넣기.

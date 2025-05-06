@@ -45,13 +45,13 @@ class MainDrawer extends StatelessWidget {
               Get.to(() => OrderViewPage());
             },
           ),
-          ListTile(
-            leading: Icon(Icons.verified),
-            title: Text('결제 확인'),
-            onTap: () {
-              // Get.to(() => PaymentConfirmPage());
-            },
-          ),
+          // ListTile(
+          //   leading: Icon(Icons.verified),
+          //   title: Text('결제 확인'),
+          //   onTap: () {
+          //     // Get.to(() => PaymentConfirmPage());
+          //   },
+          // ),
           ListTile(
             leading: Icon(Icons.shopping_cart),
             title: Text('장바구니'),
@@ -161,7 +161,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
                   return Center(child: Text('상품이 없습니다.'));
                 }
-                // 최초 데이터 세팅, 검색창 비어있음 모든 목록 검색어 있음 해당 검색어 있는 목록록
+                // 최초 데이터 세팅, 검색창 비어있음 모든 목록 검색어 있음 해당 검색어 있는 목록
                 if (_products.isEmpty) {
                   _products = snapshot.data!;
                   _filteredProducts = _searchText.isEmpty

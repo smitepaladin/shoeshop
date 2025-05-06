@@ -1,12 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:team4shoeshop/view/login.dart';
-import 'package:team4shoeshop/vm/database_handler.dart'; // ← 꼭 import 추가!
+import 'package:team4shoeshop/vm/database_handler.dart'; // ← DB 핸들러 경로 확인
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized(); // 비동기 초기화
+  // Flutter에서 async 초기화할 때 필수
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // DB 초기화 및 기본 상품 샘플 등록
   final handler = DatabaseHandler();
-  await handler.insertDefaultProductsIfEmpty(); // 샘플 상품 자동 삽입
+  await handler.initializeDB(); // DB 초기화
+  await handler.insertDefaultProductsIfEmpty(); // 기본 상품 데이터 삽입
+  
   runApp(const MyApp());
 }
 
@@ -16,11 +21,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Flutter Demo',
+      title: '신발 주문 앱',
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const Login(), // 시작화면은 로그인
+      home: const Login(), // 앱 시작 시 로그인 화면
     );
   }
 }
