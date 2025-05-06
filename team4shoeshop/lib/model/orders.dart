@@ -1,4 +1,4 @@
-class Order{
+class Orders{
 
     final int? oid; // 주문번호 autoincrement
     final String ocid; // 고객 ID
@@ -14,7 +14,7 @@ class Order{
     final String odefectivereason; // 제조사 규명 하자 내용
     final String oreason; // 반품 이유
 
-  Order({
+  Orders({
     this.oid,
     required this.ocid,
     required this.opid,
@@ -31,7 +31,7 @@ class Order{
     }
   );
 
-  Order.fromMap(Map<String, dynamic> res)
+  Orders.fromMap(Map<String, dynamic> res)
   : oid = res['oid'],
   ocid = res['ocid'],
   opid = res['opid'],
