@@ -105,7 +105,7 @@ class _LoginState extends State<Login> {
                 child: Text('회원가입'),
               ),
               ElevatedButton(
-                onPressed: () => Get.to(Adminlogin()),
+                onPressed: () => Get.off(Adminlogin()), 
                 child: Text('관리자 페이지'),
               ),
             ],
