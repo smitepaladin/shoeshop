@@ -1,4 +1,4 @@
-class Customer{
+class Approval{
     final int? aid; // 품의번호 autoincrement
     final String aeid; // 직원ID
     final String afid; // 제조사ID
@@ -8,8 +8,7 @@ class Customer{
     final String adate; // 품의 요청일
     final String ateamappdate; // 팀장 결재일
     final String achiefappdate; // 임원 결재일
-
-  Customer({
+Approval({
     this.aid,
     required this.aeid,
     required this.afid,
@@ -22,7 +21,7 @@ class Customer{
     }
   );
 
-  Customer.fromMap(Map<String, dynamic> res)
+  Approval.fromMap(Map<String, dynamic> res)
   : aid = res['aid'],
   aeid = res['aeid'],
   afid = res['afid'],

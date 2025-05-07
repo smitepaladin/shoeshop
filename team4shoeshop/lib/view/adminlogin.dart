@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/view/admin/admin_main.dart';
+import 'package:team4shoeshop/view/admin/widget/admin_sales.dart';
+import 'package:team4shoeshop/view/admin/widget/receive.dart';
 import 'package:team4shoeshop/view/login.dart';
+import 'package:team4shoeshop/vm/database_handler.dart';
 
 class Adminlogin extends StatefulWidget {
   const Adminlogin({super.key});
@@ -15,12 +19,13 @@ class _AdminloginState extends State<Adminlogin> {
     // Property
   late TextEditingController adminIdController;
   late TextEditingController adminpasswordController;
-
+  late DatabaseHandler handler;
   final box = GetStorage();
 
   @override
   void initState() {
     super.initState();
+    handler = DatabaseHandler();
     adminIdController = TextEditingController();
     adminpasswordController = TextEditingController();
     // 초기화
@@ -107,7 +112,19 @@ class _AdminloginState extends State<Adminlogin> {
     );
   }
 
-  _showDialog(){
+_showDialog() async {
+  final db = await handler.initializeDB();
+  final result = await db.query(
+    'employee',
+    columns: ['epermission'],
+    where: 'eid = ? AND epassword = ?',
+    whereArgs: [adminIdController.text, adminpasswordController.text],
+  );
+
+  if (result.isNotEmpty) {
+    final permission = result.first['epermission'];
+
+    // 로그인 성공 알림창
     Get.defaultDialog(
       title: '환영합니다',
       middleText: '신분이 확인되었습니다.',
@@ -116,15 +133,25 @@ class _AdminloginState extends State<Adminlogin> {
       actions: [
         TextButton(
           onPressed: () {
-            Get.back(); // 다이얼로그 지우기
-            saveStorage(); // Id, Password 저장
-            Get.off(AdminMain()); // 화면 이동
-          }, 
+            Get.back(); // 다이얼로그 닫기
+            saveStorage(); // ID 저장
+
+            // 권한에 따라 페이지 분기 
+            if (permission == 1) {
+              Get.off(() => AdminMain());
+            } else {
+              Get.off(() => AdminSalesPage());
+            }
+          },
           child: Text('Exit'),
         ),
-      ]
+      ],
     );
+  } else {
+    Get.snackbar('로그인 실패', 'ID 또는 비밀번호가 틀렸습니다.');
   }
+}
+
 
   saveStorage(){
     box.write('adminId', adminIdController.text);

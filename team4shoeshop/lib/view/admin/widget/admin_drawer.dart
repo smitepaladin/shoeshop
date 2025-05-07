@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:team4shoeshop/view/admin/widget/receive.dart';
 import 'package:team4shoeshop/view/adminlogin.dart';
 
 // 다른 페이지에서도 사용용 가능한 Drawer 위젯
@@ -78,6 +79,12 @@ class AdminDrawer extends StatelessWidget {
             title: Text('상품별 매출 현황'),
             onTap: () {
               //
+            },
+          ),          ListTile(
+            leading: Icon(Icons.assignment_return),
+            title: Text('상품판매현황'),
+            onTap: () {
+              Get.to(ReceivePage());
             },
           ),
           ListTile(
