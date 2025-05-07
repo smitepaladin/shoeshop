@@ -45,7 +45,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     // 저장된 사용자 ID 불러오기
     userId = box.read('p_userId') ?? '';
-    print('>>> [initState] Loaded userId from storage: $userId');
+    // print('>>> [initState] Loaded userId from storage: $userId');
 
     _loadProfile();
   }
@@ -55,7 +55,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
     print('>>> [loadProfile] Start loading profile for userId: $userId');
 
     if (userId.isEmpty) {
-      print('>>> [loadProfile] userId is empty. Cannot proceed.');
+      // print('>>> [loadProfile] userId is empty. Cannot proceed.');
       setState(() {
         isLoading = false;
       });
@@ -72,7 +72,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
     if (result.isNotEmpty) {
       final customer = Customer.fromMap(result.first);
-      print('>>> [loadProfile] Loaded customer: ${customer.cname}');
+      // print('>>> [loadProfile] Loaded customer: ${customer.cname}');
 
       // 필드에 값 채우기
       nameController.text = customer.cname;
@@ -84,7 +84,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       cardCvcController.text = customer.ccardcvc != 0 ? customer.ccardcvc.toString() : '';
       cardDateController.text = customer.ccarddate != 0 ? customer.ccarddate.toString() : '';
     } else {
-      print('>>> [loadProfile] No customer found for userId: $userId');
+      // print('>>> [loadProfile] No customer found for userId: $userId');
     }
 
     setState(() {
@@ -112,7 +112,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       whereArgs: [userId],
     );
 
-    print('>>> [updateProfile] Updated customer info in DB.');
+    // print('>>> [updateProfile] Updated customer info in DB.');
 
     Get.snackbar('수정 완료', '회원정보가 저장되었습니다.', snackPosition: SnackPosition.BOTTOM);
 

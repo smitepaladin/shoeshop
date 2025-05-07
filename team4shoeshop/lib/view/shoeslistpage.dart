@@ -7,7 +7,8 @@ import 'package:team4shoeshop/view/location_search.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:team4shoeshop/view/shoes_detail_page.dart';
 import 'package:team4shoeshop/view/orderviewpage.dart';
-import 'package:team4shoeshop/view/cart.dart';
+
+import 'cart.dart';
 
 // 다른 페이지에서도 사용용 가능한 Drawer 위젯
 class MainDrawer extends StatelessWidget {

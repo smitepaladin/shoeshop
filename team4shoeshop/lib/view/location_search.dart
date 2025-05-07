@@ -47,13 +47,20 @@ class _LocationSearchState extends State<LocationSearch> {
     });
   }
 
-  Future<void> _loadEmployees() async {
-    final db = await handler.initializeDB();
-    final result = await db.query('employee');
-    setState(() {
-      employees = result.map((e) => Employee.fromMap(e)).toList();
-    });
-  }
+Future<void> _loadEmployees() async {
+  final db = await handler.initializeDB();
+  final result = await db.query('employee');
+
+  final allEmployees = result.map((e) => Employee.fromMap(e)).toList();
+
+  // ❌ 본사 사원/팀장/임원 제외
+final filtered = allEmployees.where((e) =>
+    !(e.eid == 'emp001' || e.eid == 'emp002' || e.eid == 'emp003')).toList();
+
+  setState(() {
+    employees = filtered;
+  });
+}
 
   void _onEmployeeSelected(Employee? employee) {
     if (employee == null) return;

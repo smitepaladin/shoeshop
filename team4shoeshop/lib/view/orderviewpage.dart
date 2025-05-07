@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/model/orders.dart';
 import 'package:team4shoeshop/model/product.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
@@ -21,18 +22,23 @@ class _OrderViewPageState extends State<OrderViewPage> {
   }
 
   // 주문과 상품 정보를 함께 불러오는 함수
-  Future<List<Map<String, dynamic>>> fetchOrderWithProduct() async {
-    final orders = await handler.getAllorders(); // 주문 리스트 불러오기
-    List<Map<String, dynamic>> result = [];
-    for (final order in orders) {
-      final product = await handler.getProductByPid(order.opid); // 상품 정보 불러오기
-      // 실 상품에 대한 정보를 보여주려면 상품 테이블서 opid로 product를 찾아와야 함
-      if (product != null) {
-        result.add({'order': order, 'product': product}); // 주문+상품 묶어서 저장
-      }
+
+Future<List<Map<String, dynamic>>> fetchOrderWithProduct() async {
+  final box = GetStorage();
+  final cid = box.read('p_userId') ?? '';
+
+  final allOrders = await handler.getAllorders();
+  final myOrders = allOrders.where((o) => o.ocid == cid).toList(); // 사용자 필터
+
+  List<Map<String, dynamic>> result = [];
+  for (final order in myOrders) {
+    final product = await handler.getProductByPid(order.opid);
+    if (product != null) {
+      result.add({'order': order, 'product': product});
     }
-    return result;
   }
+  return result;
+}
 
   @override
   Widget build(BuildContext context) {
