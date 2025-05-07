@@ -110,11 +110,11 @@ Container(
               color: Colors.blue[100],
               child: Center(
                 child: FutureBuilder<int>(
-                  future: getLowStockCount(),
+                  future: getapprovalCount(),
                   builder: (context, snapshot) {
                     return Text(
                       snapshot.hasData
-                        ? "결재할 문서가 건 있습니다."
+                        ? "결재할 문서가 ${snapshot.data!}건 있습니다."
                         : "불러오는 중...",
                       textAlign: TextAlign.center,
                       style: TextStyle(fontSize: 16),
@@ -177,6 +177,13 @@ Future<int> getYesterdaySales() async {
   final String yesterdayString = "${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}";
 
   final result = await db.rawQuery('select sum(p.pprice*o.ocount) from product p, orders o where o.opid=p.pid and o.odate=?',[yesterdayString]);
+  return Sqflite.firstIntValue(result) ?? 0;
+}
+
+Future<int> getapprovalCount() async {
+  final Database db = await handler.initializeDB();
+
+  final result = await db.rawQuery('select count(*) from approval a where a.astatus="대기" or a.astatus="팀장승인"');
   return Sqflite.firstIntValue(result) ?? 0;
 }
 } // class
