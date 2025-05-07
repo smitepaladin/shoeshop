@@ -14,8 +14,68 @@ class DatabaseHandler {
       onCreate: (db, version) async {
         // approval 테이블
         await db.execute(
-          "create table approval(aid integer primary key autoincrement, aeid text, afid text, abaljoo integer, asoojoo integer, astatus text, adate text, ateamappdate text, achiefappdate text)",
+          "create table approval(aid integer primary key autoincrement, aeid text, afid text, apid text, abaljoo integer, asoojoo integer, astatus text, adate text, ateamappdate text, achiefappdate text)",
         );
+        // approval 초기데이터 상태 : 대기, 팀장승인, 임원승인
+        await db.insert('approval', {
+          'aeid': 'h001',
+          'afid': 'fac001', 
+          'apid': 'prd001', 
+          'abaljoo': 100, 
+          'asoojoo': 0, 
+          'astatus': '팀장승인', 
+          'adate': '2025-05-07', 
+          'ateamappdate': '2025-05-07', 
+          'achiefappdate': '2025-05-08', 
+        });
+
+        await db.insert('approval', {
+          'aeid': 'h001',
+          'afid': 'fac002', 
+          'apid': 'prd002', 
+          'abaljoo': 110, 
+          'asoojoo': 0, 
+          'astatus': '대기', 
+          'adate': '2025-05-06', 
+          'ateamappdate': '2025-05-06', 
+          'achiefappdate': '2025-05-07', 
+        });
+
+        await db.insert('approval', {
+          'aeid': 'h001',
+          'afid': 'fac001', 
+          'apid': 'prd001', 
+          'abaljoo': 120, 
+          'asoojoo': 0, 
+          'astatus': '임원승인', 
+          'adate': '2025-05-07', 
+          'ateamappdate': '2025-05-07', 
+          'achiefappdate': '2025-05-08', 
+        });
+
+        await db.insert('approval', {
+          'aeid': 'h001',
+          'afid': 'fac002', 
+          'apid': 'prd002', 
+          'abaljoo': 130, 
+          'asoojoo': 0, 
+          'astatus': '대기', 
+          'adate': '2025-05-08', 
+          'ateamappdate': '2025-05-08', 
+          'achiefappdate': '2025-05-09', 
+        });
+
+        await db.insert('approval', {
+          'aeid': 'h001',
+          'afid': 'fac001', 
+          'apid': 'prd001', 
+          'abaljoo': 140, 
+          'asoojoo': 0, 
+          'astatus': '대기', 
+          'adate': '2025-05-09', 
+          'ateamappdate': '2025-05-09', 
+          'achiefappdate': null, 
+        });
 
         // customer 테이블
         await db.execute(
@@ -106,66 +166,112 @@ class DatabaseHandler {
 
         // // order 초기 데이터
         // // 전월 주문 - 4월
-        // await db.insert('orders', {
-        //   'ocid': 'cust001',
-        //   'opid': 'prd001', // 에어맥스
-        //   'oeid': 'emp001', // 김사원
-        //   'ocount': 2,
-        //   'odate': '2025-04-10',
-        //   'ostatus': '수령',
-        //   'ocartbool': 0,
-        //   'oreturncount': 0,
-        //   'oreturndate': '',
-        //   'oreturnstatus': '',
-        //   'odefectivereason': '',
-        //   'oreason': '',
-        // });
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd001', // 에어맥스
+          'oeid': 'h001', // 본사사원
+          'ocount': 2,
+          'odate': '2025-04-10',
+          'ostatus': '수령',
+          'ocartbool': 0,
+          'oreturncount': 0,
+          'oreturndate': '',
+          'oreturnstatus': '',
+          'odefectivereason': '',
+          'oreason': '',
+        });
 
-        // await db.insert('orders', {
-        //   'ocid': 'cust001',
-        //   'opid': 'prd002', // 울트라부스트
-        //   'oeid': 'emp002', // 박팀장
-        //   'ocount': 1,
-        //   'odate': '2025-04-25',
-        //   'ostatus': '수령',
-        //   'ocartbool': 0,
-        //   'oreturncount': 0,
-        //   'oreturndate': '',
-        //   'oreturnstatus': '',
-        //   'odefectivereason': '',
-        //   'oreason': '',
-        // });
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd002', // 울트라부스트
+          'oeid': 'h002', // 본사팀장
+          'ocount': 1,
+          'odate': '2025-04-25',
+          'ostatus': '수령',
+          'ocartbool': 0,
+          'oreturncount': 0,
+          'oreturndate': '',
+          'oreturnstatus': '',
+          'odefectivereason': '',
+          'oreason': '',
+        });
 
-        // // 당월 주문 - 5월
-        // await db.insert('orders', {
-        //   'ocid': 'cust001',
-        //   'opid': 'prd003', // 990v5
-        //   'oeid': 'emp001',
-        //   'ocount': 3,
-        //   'odate': '2025-05-01',
-        //   'ostatus': '발송',
-        //   'ocartbool': 0,
-        //   'oreturncount': 0,
-        //   'oreturndate': '',
-        //   'oreturnstatus': '',
-        //   'odefectivereason': '',
-        //   'oreason': '',
-        // });
+        // 당월 주문 - 5월
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd001', // 990v5
+          'oeid': 'h001',
+          'ocount': 3,
+          'odate': '2025-05-06',
+          'ostatus': '발송',
+          'ocartbool': 0,
+          'oreturncount': 0,
+          'oreturndate': '',
+          'oreturnstatus': '',
+          'odefectivereason': '',
+          'oreason': '',
+        });
 
-        // await db.insert('orders', {
-        //   'ocid': 'cust001',
-        //   'opid': 'prd004', // 척테일러
-        //   'oeid': 'emp003', // 이이사
-        //   'ocount': 1,
-        //   'odate': '2025-05-02',
-        //   'ostatus': '발송',
-        //   'ocartbool': 0,
-        //   'oreturncount': 0,
-        //   'oreturndate': '',
-        //   'oreturnstatus': '',
-        //   'odefectivereason': '',
-        //   'oreason': '',
-        // });
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd002', // 척테일러
+          'oeid': 'h003', // 본사임원
+          'ocount': 1,
+          'odate': '2025-05-07',
+          'ostatus': '발송',
+          'ocartbool': 0,
+          'oreturncount': 0,
+          'oreturndate': '',
+          'oreturnstatus': '',
+          'odefectivereason': '',
+          'oreason': '',
+        });
+
+        // 반품 초기데이터
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd002', // 예: 나이키 에어맥스
+          'oeid': 'h002',
+          'ocount': 1,
+          'odate': '2025-05-01',
+          'ostatus': '반품완료',
+          'ocartbool': 0,
+          'oreturncount': 1,
+          'oreturndate': '2025-05-04',
+          'oreturnstatus': '완료',
+          'odefectivereason': '사이즈 불량',
+          'oreason': '사이즈가 맞지 않음',
+        });
+
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd001', // 예: 아디다스 슈퍼스타
+          'oeid': 'h001',
+          'ocount': 2,
+          'odate': '2025-04-28',
+          'ostatus': '반품요청',
+          'ocartbool': 0,
+          'oreturncount': 2,
+          'oreturndate': '2025-05-05',
+          'oreturnstatus': '요청',
+          'odefectivereason': '불량',
+          'oreason': '제품에 하자가 있음',
+        });
+
+        await db.insert('orders', {
+          'ocid': 'cust001',
+          'opid': 'prd001', // 예: 반스 올드스쿨
+          'oeid': 'h002',
+          'ocount': 1,
+          'odate': '2025-05-03',
+          'ostatus': '반품처리중',
+          'ocartbool': 0,
+          'oreturncount': 1,
+          'oreturndate': '2025-05-06',
+          'oreturnstatus': '처리중',
+          'odefectivereason': '변심',
+          'oreason': '디자인이 마음에 들지 않음',
+        });
 
         // product 테이블
         // final int? id; // 신발 테이블 기본 id autoincrement
@@ -225,11 +331,47 @@ Future<void> insertDefaultProductsIfEmpty() async {
     'pname': '울트라부스트',
     'psize': 265,
     'pcolor': '흰색',
-    'pstock': 30,
+    'pstock': 29,
     'pprice': 139000,
     'pimage': emptyImage,
   });
+
+  // await db.insert('product', {
+  //   'pid': 'prd001',
+  //   'pbrand': '뉴발란스',
+  //   'pname': '990v5',
+  //   'psize': 280,
+  //   'pcolor': '회색',
+  //   'pstock': 40,
+  //   'pprice': 159000,
+  //   'pimage': emptyImage,
+  // });
+
+  // await db.insert('product', {
+  //   'pid': 'prd002',
+  //   'pbrand': '컨버스',
+  //   'pname': '척테일러',
+  //   'psize': 260,
+  //   'pcolor': '빨강',
+  //   'pstock': 60,
+  //   'pprice': 69000,
+  //   'pimage': emptyImage,
+  // });
+
+  // await db.insert('product', {
+  //   'pid': 'prd001',
+  //   'pbrand': '리복',
+  //   'pname': '클래식레더',
+  //   'psize': 275,
+  //   'pcolor': '네이비',
+  //   'pstock': 35,
+  //   'pprice': 99000,
+  //   'pimage': emptyImage,
+  // });
+
   }
+
+  
 
   //employee에 28개 데이터 넣기.
   // 대리점 id d001 ~ d025, 본사 id h001 ~ h003, 비번 모두 1234
