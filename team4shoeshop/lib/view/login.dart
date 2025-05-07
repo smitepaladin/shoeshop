@@ -135,7 +135,7 @@ class _LoginState extends State<Login> {
       actions: [
         TextButton(
           onPressed: () {
-            saveStorage(); // ✅ 먼저 저장
+            saveStorage(); // 먼저 저장
             Get.back(); // 다이얼로그 닫기
             Get.to(() => Shoeslistpage()); // 그 다음 화면 이동
           },

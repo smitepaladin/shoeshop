@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/model/orders.dart';
 import 'package:team4shoeshop/model/product.dart';
+import 'package:team4shoeshop/model/employee.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
 class OrderViewPage extends StatefulWidget {
@@ -35,15 +36,23 @@ class _OrderViewPageState extends State<OrderViewPage> {
       'orders',
       where: 'ocid = ? AND ocartbool = ?',
       whereArgs: [cid, 0], // 장바구니가 아닌 주문만 조회
+      orderBy: 'odate desc'
     );
 
     List<Map<String, dynamic>> result = [];
     for (final order in orders) {
       final product = await handler.getProductByPid(order['opid']);
+      final store = await db.query(
+        'employee',
+        where: 'eid = ?',
+        whereArgs: [order['oeid']],
+      );
+      
       if (product != null) {
         result.add({
           'order': Orders.fromMap(order),
           'product': product,
+          'store': store.isNotEmpty ? Employee.fromMap(store.first) : null,
         });
       }
     }
@@ -73,6 +82,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
             itemBuilder: (context, index) {
               final order = orderList[index]['order'] as Orders;
               final product = orderList[index]['product'] as Product;
+              final store = orderList[index]['store'] as Employee?;
               final isCompleted = order.ostatus == '고객수령완료';
               return Container(
                 margin: const EdgeInsets.only(bottom: 20),
@@ -131,6 +141,12 @@ class _OrderViewPageState extends State<OrderViewPage> {
                                 children: [
                                   Text('가격 ', style: TextStyle(fontWeight: FontWeight.bold)),
                                   Text('${product.pprice}원'),
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  Text('구매 대리점 ', style: TextStyle(fontWeight: FontWeight.bold)),
+                                  Text(store?.ename ?? '미지정'),
                                 ],
                               ),
                               if (isCompleted)

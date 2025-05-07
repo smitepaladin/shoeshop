@@ -2,8 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:team4shoeshop/model/product.dart';
 import 'package:team4shoeshop/model/orders.dart';
+import 'package:team4shoeshop/model/employee.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:team4shoeshop/view/edit_profile_page.dart';
+import 'package:team4shoeshop/view/buy.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -13,10 +16,10 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  final DatabaseHandler handler = DatabaseHandler(); // db핸들러
-  final box = GetStorage(); // 로그인한 id정보 들고다니기 위해 스토리지 사용용
-  List<Map<String, dynamic>> cartItems = []; // {product: Product, order: Orders}
-  Set<String> selectedItems = {}; // 선택된 상품의 oid를 저장
+  final DatabaseHandler handler = DatabaseHandler();
+  final box = GetStorage();
+  List<Map<String, dynamic>> cartItems = [];
+  Set<String> selectedItems = {};
   bool isLoading = true;
 
   @override
@@ -34,7 +37,6 @@ class _CartPageState extends State<CartPage> {
     }
 
     final db = await handler.initializeDB();
-    // 장바구니에 있는 주문 목록 가져오기
     final List<Map<String, dynamic>> orders = await db.query(
       'orders',
       where: 'ocartbool = ? AND ocid = ?',
@@ -43,12 +45,18 @@ class _CartPageState extends State<CartPage> {
 
     List<Map<String, dynamic>> items = [];
     for (var order in orders) {
-      // 각 주문에 해당하는 상품 정보 가져오기
       final product = await handler.getProductByPid(order['opid']);
+      final store = await db.query(
+        'employee',
+        where: 'eid = ?',
+        whereArgs: [order['oeid']],
+      );
+
       if (product != null) {
         items.add({
           'product': product,
           'order': Orders.fromMap(order),
+          'store': store.isNotEmpty ? Employee.fromMap(store.first) : null,
         });
       }
     }
@@ -83,6 +91,7 @@ class _CartPageState extends State<CartPage> {
   Widget _buildCartItem(Map<String, dynamic> item) {
     final product = item['product'] as Product;
     final order = item['order'] as Orders;
+    final store = item['store'] as Employee?;
     final isSelected = selectedItems.contains(order.oid.toString());
 
     return Card(
@@ -100,6 +109,7 @@ class _CartPageState extends State<CartPage> {
             Text('수량: ${order.ocount}'),
             Text('사이즈: ${product.psize}'),
             Text('색상: ${product.pcolor}'),
+            Text('구매 대리점: ${store?.ename ?? '미지정'}'),
           ],
         ),
         trailing: IconButton(
@@ -121,50 +131,76 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
+  Future<void> _checkCardInfoAndProceed() async {
+    final cid = box.read('p_userId');
+    if (cid == null) {
+      Get.snackbar('알림', '로그인이 필요합니다.');
+      return;
+    }
+
+    final db = await handler.initializeDB();
+    final result = await db.query(
+      'customer',
+      where: 'cid = ?',
+      whereArgs: [cid],
+    );
+
+    if (result.isEmpty) {
+      Get.snackbar('오류', '사용자 정보를 찾을 수 없습니다.');
+      return;
+    }
+
+    final customer = result.first;
+    if (customer['ccardnum'] == 0 || customer['ccardcvc'] == 0 || customer['ccarddate'] == 0) {
+      Get.snackbar('카드 정보 없음', '회원정보를 먼저 수정해주세요.');
+      await Future.delayed(Duration(seconds: 1));
+      Get.to(() => const EditProfilePage());
+      return;
+    }
+
+    final selectedProducts = cartItems.where((item) {
+      final order = item['order'] as Orders;
+      return selectedItems.contains(order.oid.toString());
+    }).map((item) {
+      final product = item['product'] as Product;
+      final order = item['order'] as Orders;
+      final store = item['store'] as Employee?;
+      return {
+        'product': product,
+        'quantity': order.ocount,
+        'storeId': store?.eid,
+      };
+    }).toList();
+
+    if (selectedProducts.isEmpty) {
+      Get.snackbar('알림', '선택된 상품이 없습니다.');
+      return;
+    }
+
+    // 재고 부족 확인
+    for (var item in selectedProducts) {
+      final product = item['product'] as Product;
+      final quantity = item['quantity'] as int;
+      if (quantity > product.pstock) {
+        Get.snackbar('재고 부족', '${product.pname}의 재고가 부족합니다.');
+        return;
+      }
+    }
+
+    // ✅ 문제 없으면 구매 페이지 이동
+    Get.to(() => const BuyPage(), arguments: {
+      'products': selectedProducts,
+      'isFromCart': true,
+    });
+  }
+
   Future<void> _proceedToCheckout() async {
     if (selectedItems.isEmpty) {
       Get.snackbar('알림', '결제할 상품을 선택해주세요.');
       return;
     }
-    final db = await handler.initializeDB();
-    final cid = box.read('p_userId'); // 카드 결제 연동시 필요
 
-    // 선택된 상품들 처리
-    for (var item in cartItems) {
-      final order = item['order'] as Orders;
-      if (selectedItems.contains(order.oid.toString())) {
-        // 장바구니에서 제거
-        await db.update(
-          'orders',
-          {'ocartbool': 0},
-          where: 'oid = ?',
-          whereArgs: [order.oid],
-        );
-
-        // 주문 상태 업데이트
-        await db.update(
-          'orders',
-          {
-            'ostatus': '결제완료',
-            'odate': DateTime.now().toIso8601String(),
-          },
-          where: 'oid = ?',
-          whereArgs: [order.oid],
-        );
-
-        // 재고 차감
-        final product = item['product'] as Product;
-        await db.update(
-          'product',
-          {'pstock': product.pstock - order.ocount},
-          where: 'pid = ?',
-          whereArgs: [product.pid],
-        );
-      }
-    }
-
-    Get.snackbar('결제 완료', '선택한 상품이 결제되었습니다.', duration: Duration(seconds: 1));
-    await _loadCartItems(); // 장바구니 새로고침
+    await _checkCardInfoAndProceed();
   }
 
   @override

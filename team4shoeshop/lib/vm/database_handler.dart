@@ -1,5 +1,4 @@
 import 'dart:typed_data';
-
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/customer.dart';
@@ -199,15 +198,15 @@ class DatabaseHandler {
 Future<void> insertDefaultProductsIfEmpty() async {
   final db = await initializeDB();
 
-  final existing = await db.query('product'); // ✅ 존재 여부 확인
+  final existing = await db.query('product'); // 존재 여부 확인
   if (existing.isNotEmpty) {
-    print('>>> Product 테이블이 이미 존재합니다. 초기 데이터 삽입 생략.');
+    // print('>>> Product 테이블이 이미 존재합니다. 초기 데이터 삽입 생략.');
     return; // 아무것도 하지 않음
   }
 
   Uint8List emptyImage = Uint8List(0);
 
-  // ✅ 이제 테이블이 비었을 경우에만 insert 수행
+  //이제 테이블이 비었을 경우에만 insert 수행
   await db.insert('product', {
     'pid': 'prd001',
     'pbrand': '나이키',

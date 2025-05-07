@@ -169,7 +169,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                               .where((p) => p.pname.contains(_searchText))
                               .toList();
                 }
-                // 상품 이미지 그리드뷰뷰
+                // 상품 이미지 그리드뷰
                 return GridView.builder(
                   padding: EdgeInsets.all(12),
                   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

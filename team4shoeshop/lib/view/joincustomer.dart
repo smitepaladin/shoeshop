@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:team4shoeshop/model/customer.dart';
 import 'package:team4shoeshop/view/login.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
+import 'package:remedi_kopo/remedi_kopo.dart';
 
 class Joincustomer extends StatefulWidget {
   const Joincustomer({super.key});
@@ -18,7 +19,10 @@ class _JoincustomerState extends State<Joincustomer> {
   final TextEditingController cpasswordController = TextEditingController();
   final TextEditingController cphoneController = TextEditingController();
   final TextEditingController cemailController = TextEditingController();
-  final TextEditingController caddressController = TextEditingController();
+  final TextEditingController caddressController = TextEditingController(); // 최종 주소
+  final TextEditingController detailAddressController = TextEditingController(); // 상세주소
+
+  String basicAddress = ''; // 기본주소
 
   late DatabaseHandler handler;
 
@@ -26,6 +30,26 @@ class _JoincustomerState extends State<Joincustomer> {
   void initState() {
     super.initState();
     handler = DatabaseHandler();
+  }
+
+  Future<void> _searchAddress() async {
+    KopoModel? model = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => RemediKopo()),
+    );
+
+    if (model != null && model.address != null) {
+      setState(() {
+        basicAddress = model.address!;
+        _combineAddress(); // 기본주소 바뀔 때 결합도 반영
+      });
+    }
+  }
+
+  void _combineAddress() {
+    final detail = detailAddressController.text.trim();
+    final fullAddress = '$basicAddress ${detail.isNotEmpty ? detail : ''}'.trim();
+    caddressController.text = fullAddress;
   }
 
   Future<void> _join() async {
@@ -61,48 +85,72 @@ class _JoincustomerState extends State<Joincustomer> {
         backgroundColor: Colors.green,
         colorText: Colors.white,
       );
-      Get.offAll(() => Login()); // 🔄 수정된 부분
+      Get.offAll(() => const Login());
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('회원가입')),
+      appBar: AppBar(title: const Text('회원가입')),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16),
+        padding: const EdgeInsets.all(16),
         child: Column(
           children: [
             TextField(
               controller: cidController,
-              decoration: InputDecoration(labelText: '아이디'),
+              decoration: const InputDecoration(labelText: '아이디'),
             ),
             TextField(
               controller: cnameController,
-              decoration: InputDecoration(labelText: '이름'),
+              decoration: const InputDecoration(labelText: '이름'),
             ),
             TextField(
               controller: cpasswordController,
-              decoration: InputDecoration(labelText: '비밀번호'),
+              decoration: const InputDecoration(labelText: '비밀번호'),
               obscureText: true,
             ),
             TextField(
               controller: cphoneController,
-              decoration: InputDecoration(labelText: '전화번호'),
+              decoration: const InputDecoration(labelText: '전화번호'),
             ),
             TextField(
               controller: cemailController,
-              decoration: InputDecoration(labelText: '이메일'),
+              decoration: const InputDecoration(labelText: '이메일'),
             ),
+            const SizedBox(height: 16),
+            Row(
+              children: [
+                Expanded(
+                  child: Text(basicAddress.isNotEmpty ? basicAddress : '주소를 선택하세요.'),
+                ),
+                TextButton(
+                  onPressed: _searchAddress,
+                  child: const Text('주소 검색'),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: detailAddressController,
+              onChanged: (_) => _combineAddress(),
+              decoration: const InputDecoration(labelText: '상세 주소'),
+            ),
+            const SizedBox(height: 8),
             TextField(
               controller: caddressController,
-              decoration: InputDecoration(labelText: '주소'),
+              readOnly: true,
+              decoration: const InputDecoration(labelText: '최종 주소 (자동완성)'),
             ),
-            SizedBox(height: 20),
-            ElevatedButton(onPressed: _join, child: Text('가입하기')),
+            const SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _join,
+              child: const Text('가입하기'),
+            ),
           ],
         ),
       ),
     );
   }
 }
+

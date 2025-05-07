@@ -53,7 +53,7 @@ Future<void> _loadEmployees() async {
 
   final allEmployees = result.map((e) => Employee.fromMap(e)).toList();
 
-  // ❌ 본사 사원/팀장/임원 제외
+  // 본사 사원/팀장/임원 제외
 final filtered = allEmployees.where((e) =>
     !(e.eid == 'emp001' || e.eid == 'emp002' || e.eid == 'emp003')).toList();
 
