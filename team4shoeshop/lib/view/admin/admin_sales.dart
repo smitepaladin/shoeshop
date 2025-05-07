@@ -1,20 +1,16 @@
-/*
-2025.05.05 이학현 / admin 폴더, admin 로그인 후 넘어오는 메인 화면 생성
-*/
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
-
-class AdminMain extends StatefulWidget {
-  const AdminMain({super.key});
+class AdminSales extends StatefulWidget {
+  const AdminSales({super.key});
 
   @override
-  State<AdminMain> createState() => _AdminMainState();
+  State<AdminSales> createState() => _AdminSalesState();
 }
 
-class _AdminMainState extends State<AdminMain> {
+class _AdminSalesState extends State<AdminSales> {
   late DatabaseHandler handler;
 
   @override
@@ -157,9 +153,9 @@ Flexible(
     );
   } // build
 
-Future<int> getLowStockCount() async {
-  final Database db = await handler.initializeDB();
-  final result = await db.rawQuery('select count(*) from product where pstock < 30');
+  Future<int> getLowStockCount() async {
+  final db = await handler.initializeDB();
+  final result = await db.rawQuery('select count(*) as cnt from product where pstock < 30');
   return Sqflite.firstIntValue(result) ?? 0;
 }
 
