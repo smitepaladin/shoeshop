@@ -8,6 +8,7 @@ class Approval{
     final String adate; // 품의 요청일
     final String ateamappdate; // 팀장 결재일
     final String achiefappdate; // 임원 결재일
+    final String apid; // 주문해야할 신발 id
 Approval({
     this.aid,
     required this.aeid,
@@ -17,7 +18,8 @@ Approval({
     required this.astatus,
     required this.adate,
     required this.ateamappdate,
-    required this.achiefappdate
+    required this.achiefappdate,
+    required this.apid
     }
   );
 
@@ -30,5 +32,6 @@ Approval({
   astatus = res['astatus'],
   adate = res['adate'],
   ateamappdate = res['ateamappdate'],
-  achiefappdate = res['achiefappdate'];
+  achiefappdate = res['achiefappdate'],
+  apid = res['apid'];
 }

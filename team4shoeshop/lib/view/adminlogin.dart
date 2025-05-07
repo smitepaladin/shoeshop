@@ -138,9 +138,9 @@ _showDialog() async {
 
             // 권한에 따라 페이지 분기 
             if (permission == 1) {
-              Get.off(() => AdminMain());
-            } else {
               Get.off(() => AdminSalesPage());
+            } else {
+              Get.off(() => AdminMain());
             }
           },
           child: Text('Exit'),

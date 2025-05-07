@@ -80,13 +80,7 @@ class AdminDrawer extends StatelessWidget {
             onTap: () {
               //
             },
-          ),          ListTile(
-            leading: Icon(Icons.assignment_return),
-            title: Text('상품판매현황'),
-            onTap: () {
-              Get.to(ReceivePage());
-            },
-          ),
+          ), 
           ListTile(
             leading: Icon(Icons.logout),
             title: Text('로그아웃'),
