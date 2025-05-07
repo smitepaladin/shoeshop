@@ -13,42 +13,32 @@ class OrderViewPage extends StatefulWidget {
 }
 
 class _OrderViewPageState extends State<OrderViewPage> {
-  late DatabaseHandler handler;
-  final box = GetStorage();
+  late DatabaseHandler handler; // DB 핸들러
 
   @override
   void initState() {
     super.initState();
-    handler = DatabaseHandler();
+    handler = DatabaseHandler(); // 핸들러 초기화
   }
 
-  Future<List<Map<String, dynamic>>> fetchOrderWithProduct() async {
-    final cid = box.read('p_userId');
-    if (cid == null) {
-      Get.snackbar('알림', '로그인이 필요합니다.');
-      Get.back();
-      return [];
-    }
+  // 주문과 상품 정보를 함께 불러오는 함수
 
-    final db = await handler.initializeDB();
-    final List<Map<String, dynamic>> orders = await db.query(
-      'orders',
-      where: 'ocid = ? AND ocartbool = ?',
-      whereArgs: [cid, 0], // 장바구니가 아닌 주문만 조회
-    );
+Future<List<Map<String, dynamic>>> fetchOrderWithProduct() async {
+  final box = GetStorage();
+  final cid = box.read('p_userId') ?? '';
 
-    List<Map<String, dynamic>> result = [];
-    for (final order in orders) {
-      final product = await handler.getProductByPid(order['opid']);
-      if (product != null) {
-        result.add({
-          'order': Orders.fromMap(order),
-          'product': product,
-        });
-      }
+  final allOrders = await handler.getAllorders();
+  final myOrders = allOrders.where((o) => o.ocid == cid).toList(); // 사용자 필터
+
+  List<Map<String, dynamic>> result = [];
+  for (final order in myOrders) {
+    final product = await handler.getProductByPid(order.opid);
+    if (product != null) {
+      result.add({'order': order, 'product': product});
     }
-    return result;
   }
+  return result;
+}
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +48,10 @@ class _OrderViewPageState extends State<OrderViewPage> {
         centerTitle: true,
       ),
       body: FutureBuilder<List<Map<String, dynamic>>>(
-        future: fetchOrderWithProduct(),
+        future: fetchOrderWithProduct(), // 주문+상품 정보 비동기 로딩
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return Center(child: CircularProgressIndicator()); // 로딩 중
           }
           if (!snapshot.hasData || snapshot.data!.isEmpty) {
             return Center(child: Text('주문 내역이 없습니다.'));
@@ -71,24 +61,26 @@ class _OrderViewPageState extends State<OrderViewPage> {
             padding: const EdgeInsets.all(16),
             itemCount: orderList.length,
             itemBuilder: (context, index) {
-              final order = orderList[index]['order'] as Orders;
-              final product = orderList[index]['product'] as Product;
-              final isCompleted = order.ostatus == '고객수령완료';
+              final order = orderList[index]['order'] as Orders; // 주문 정보
+              final product = orderList[index]['product'] as Product; // 상품 정보
+              final isCompleted = order.ostatus == '고객수령완료'; // 주문 상태 체크
               return Container(
                 margin: const EdgeInsets.only(bottom: 20),
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: isCompleted ? Colors.yellow[200] : Colors.white,
+                  color: isCompleted ? Colors.yellow[200] : Colors.white, // 완료시 노란색 강조
                   borderRadius: BorderRadius.circular(16),
                   border: Border.all(color: Colors.black12),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    // 주문일자
                     Text(order.odate, style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: 8),
                     Row(
                       children: [
+                        // 상품 이미지
                         Container(
                           width: 70,
                           height: 70,
@@ -102,10 +94,12 @@ class _OrderViewPageState extends State<OrderViewPage> {
                               : Center(child: Text('신발\n이미지', textAlign: TextAlign.center)),
                         ),
                         const SizedBox(width: 12),
+                        // 상품 상세 정보
                         Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
+                              // 상품명, 사이즈, 수량
                               Row(
                                 children: [
                                   Text('상품명 ', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -118,6 +112,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
                                   Text('${order.ocount}'),
                                 ],
                               ),
+                              // 브랜드, 색깔
                               Row(
                                 children: [
                                   Text('브랜드 ', style: TextStyle(fontWeight: FontWeight.bold)),
@@ -127,12 +122,14 @@ class _OrderViewPageState extends State<OrderViewPage> {
                                   Text(product.pcolor),
                                 ],
                               ),
+                              // 가격
                               Row(
                                 children: [
                                   Text('가격 ', style: TextStyle(fontWeight: FontWeight.bold)),
                                   Text('${product.pprice}원'),
                                 ],
                               ),
+                              // 주문 상태(고객수령완료 등)
                               if (isCompleted)
                                 Padding(
                                   padding: const EdgeInsets.only(top: 4.0),
@@ -156,10 +153,13 @@ class _OrderViewPageState extends State<OrderViewPage> {
           );
         },
       ),
+      // 하단 홈버튼 (GetX로 뒤로가기)
       bottomNavigationBar: Padding(
         padding: const EdgeInsets.all(16.0),
         child: ElevatedButton(
-          onPressed: () => Get.back(),
+          onPressed: () {
+            Get.back(); // 홈으로 이동 (GetX 사용)
+          },
           child: Text('홈'),
         ),
       ),
