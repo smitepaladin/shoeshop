@@ -4,6 +4,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:team4shoeshop/view/admin/admin_approval.dart';
+import 'package:team4shoeshop/view/admin/admin_inven.dart';
+import 'package:team4shoeshop/view/admin/admin_main.dart';
+import 'package:team4shoeshop/view/admin/admin_return.dart';
+import 'package:team4shoeshop/view/admin/admin_sales.dart';
 import 'package:team4shoeshop/view/adminlogin.dart';
 
 // 다른 페이지에서도 사용용 가능한 Drawer 위젯
@@ -16,6 +21,7 @@ class AdminDrawer extends StatelessWidget {
     String adminId = box.read('adminId') ?? '';
     return Drawer(
       child: ListView(
+        padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
             accountName: Text(adminId.isNotEmpty ? adminId : '로그인 필요'),
@@ -26,37 +32,37 @@ class AdminDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.shopping_bag),
+            title: Text('메인 화면'),
+            onTap: () {
+              Get.off(AdminMain());
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.shopping_bag),
             title: Text('전체 재고 현황'),
             onTap: () {
-              Get.back();
+              Get.off(AdminInven());
             },
           ),
           ListTile(
             leading: Icon(Icons.person_outline),
             title: Text('판매 현황 통계'),
             onTap: () {
-              //
+              Get.off(AdminSales());
             },
           ),
           ListTile(
             leading: Icon(Icons.receipt_long),
             title: Text('기안 및 결재'),
             onTap: () {
-              //
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.verified),
-            title: Text('결제 확인'),
-            onTap: () {
-              //
+              Get.off(AdminApproval());
             },
           ),
           ListTile(
             leading: Icon(Icons.shopping_cart),
             title: Text('반품 내역'),
             onTap: () {
-              //
+              Get.off(AdminReturn());
             },
           ),
           ListTile(
