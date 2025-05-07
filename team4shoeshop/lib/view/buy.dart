@@ -19,26 +19,28 @@ class _BuyPageState extends State<BuyPage> {
 
   late Product product;
   late String cid;
+  late int count;
   final passwordController = TextEditingController();
 
   bool isLoading = true;
   Customer? customer;
 
-@override
-void initState() {
-  super.initState();
-  final box = GetStorage();
-  cid = box.read('p_userId') ?? '';
+  @override
+  void initState() {
+    super.initState();
+    final box = GetStorage();
+    cid = box.read('p_userId') ?? '';
 
-  final args = Get.arguments;
-  if (args is Map && args.containsKey('product')) {
-    product = args['product'];
-    _loadCustomer();
-  } else {
-    Get.snackbar("에러", "잘못된 접근입니다.");
-    Get.back();
+    final args = Get.arguments;
+    if (args is Map && args.containsKey('product')) {
+      product = args['product'];
+      count = args['count'] ?? 1; // 수량 받기 (기본 1)
+      _loadCustomer();
+    } else {
+      Get.snackbar("에러", "잘못된 접근입니다.");
+      Get.back();
+    }
   }
-}
 
   Future<void> _loadCustomer() async {
     final db = await handler.initializeDB();
@@ -47,12 +49,11 @@ void initState() {
     if (result.isNotEmpty) {
       customer = Customer.fromMap(result.first);
 
-      // 카드 정보가 없으면 수정 페이지로 이동
       if (customer!.ccardnum == 0 ||
           customer!.ccardcvc == 0 ||
           customer!.ccarddate == 0) {
         Get.snackbar("카드 정보 없음", "회원정보를 먼저 수정해주세요.");
-        await Future.delayed(Duration(seconds: 1));
+        await Future.delayed(const Duration(seconds: 1));
         Get.off(() => const EditProfilePage());
         return;
       }
@@ -66,12 +67,11 @@ void initState() {
   Future<void> _processPurchase() async {
     final db = await handler.initializeDB();
 
-    // orders 테이블에 삽입
     await db.insert('orders', {
       'ocid': cid,
       'opid': product.pid,
-      'oeid': '', // 직원은 아직 미지정
-      'ocount': 1,
+      'oeid': '',
+      'ocount': count, // 수량 반영
       'odate': DateTime.now().toIso8601String(),
       'ostatus': '결제완료',
       'ocartbool': 0,
@@ -82,16 +82,15 @@ void initState() {
       'oreason': '',
     });
 
-    // product 테이블 재고 차감
     await db.update(
       'product',
-      {'pstock': product.pstock - 1},
+      {'pstock': product.pstock - count}, // 재고 차감
       where: 'pid = ?',
       whereArgs: [product.pid],
     );
 
-    Get.snackbar("구매 완료", "${product.pname} 구매가 완료되었습니다.");
-    await Future.delayed(Duration(seconds: 1));
+    Get.snackbar("구매 완료", "${product.pname} ($count개) 구매가 완료되었습니다.");
+    await Future.delayed(const Duration(seconds: 1));
     Get.offAll(() => const Shoeslistpage());
   }
 
@@ -106,8 +105,9 @@ void initState() {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("상품명: ${product.pname}", style: TextStyle(fontSize: 18)),
-                  Text("가격: ${product.pprice}원", style: TextStyle(fontSize: 18)),
+                  Text("상품명: ${product.pname}", style: const TextStyle(fontSize: 18)),
+                  Text("수량: $count개", style: const TextStyle(fontSize: 18)),
+                  Text("가격: ${product.pprice * count}원", style: const TextStyle(fontSize: 18)),
                   const SizedBox(height: 20),
                   const Text("카드 비밀번호 앞 두 자리", style: TextStyle(fontSize: 16)),
                   TextField(
@@ -132,3 +132,4 @@ void initState() {
     );
   }
 }
+

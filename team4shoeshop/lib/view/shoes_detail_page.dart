@@ -1,17 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:team4shoeshop/model/product.dart';
-
 import 'buy.dart';
 
-class ShoesDetailPage extends StatelessWidget {
-  final Product product; // 상품
-  
-  const ShoesDetailPage({required this.product, super.key});
+class ShoesDetailPage extends StatefulWidget {
+  final Product product;
+
+  const ShoesDetailPage({super.key, required this.product});
+
+  @override
+  State<ShoesDetailPage> createState() => _ShoesDetailPageState();
+}
+
+class _ShoesDetailPageState extends State<ShoesDetailPage> {
+  int selectedCount = 1;
 
   @override
   Widget build(BuildContext context) {
-    
+    final product = widget.product;
+
     return Scaffold(
       appBar: AppBar(title: Text('상품 상세'), centerTitle: true),
       body: Padding(
@@ -21,29 +28,25 @@ class ShoesDetailPage extends StatelessWidget {
           children: [
             // 상품 이미지
             Expanded(
-              child:
-                  product.pimage.isNotEmpty
-                      ? ClipRRect(
-                        borderRadius: BorderRadius.circular(12),
-                        child: Image.memory(
-                          product.pimage,
-                          fit: BoxFit.cover,
-                          width: double.infinity,
-                        ),
-                      )
-                      : Container(
-                        color: Colors.pink[100],
-                        child: Center(
-                          child: Text(
-                            '신발\n이미지',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16),
-                          ),
-                        ),
+              child: product.pimage.isNotEmpty
+                  ? ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.memory(
+                        product.pimage,
+                        fit: BoxFit.cover,
+                        width: double.infinity,
                       ),
+                    )
+                  : Container(
+                      color: Colors.pink[100],
+                      child: const Center(
+                        child: Text('신발\n이미지',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 16)),
+                      ),
+                    ),
             ),
             const SizedBox(height: 24),
-            // 상품 정보
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -71,17 +74,19 @@ class ShoesDetailPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('수량', style: TextStyle(fontWeight: FontWeight.bold)),
-                // 수량 선택 드롭다운(예시)
                 DropdownButton<int>(
-                  value: 1,
-                  items:
-                      List.generate(product.pstock, (i) => i + 1)
-                          .map(
-                            (e) =>
-                                DropdownMenuItem(value: e, child: Text('$e')),
-                          )
-                          .toList(),
-                  onChanged: (v) {},
+                  value: selectedCount,
+                  items: List.generate(product.pstock, (i) => i + 1)
+                      .map((e) =>
+                          DropdownMenuItem(value: e, child: Text('$e')))
+                      .toList(),
+                  onChanged: (v) {
+                    if (v != null) {
+                      setState(() {
+                        selectedCount = v;
+                      });
+                    }
+                  },
                 ),
               ],
             ),
@@ -89,7 +94,7 @@ class ShoesDetailPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text('가격', style: TextStyle(fontWeight: FontWeight.bold)),
-                Text('${product.pprice}원'),
+                Text('${product.pprice * selectedCount}원'),
               ],
             ),
             const Spacer(),
@@ -98,21 +103,22 @@ class ShoesDetailPage extends StatelessWidget {
               children: [
                 ElevatedButton(
                   onPressed: () {
-                    // 장바구니 담기 기능 구현
+                    // 장바구니 담기 기능 구현 예정
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple[100],
                   ),
-                  child: Text('장바구니 담기'),
+                  child: const Text('장바구니 담기'),
                 ),
-ElevatedButton(
-  onPressed: () {
-Get.to(() => const BuyPage(), arguments: {
-  'product': product
-});
-  },
-  child: const Text("구매하기"),
-),
+                ElevatedButton(
+                  onPressed: () {
+                    Get.to(() => const BuyPage(), arguments: {
+                      'product': product,
+                      'count': selectedCount, // 구매 수량도 전달
+                    });
+                  },
+                  child: const Text("구매하기"),
+                ),
               ],
             ),
           ],
