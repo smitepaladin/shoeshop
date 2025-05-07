@@ -127,7 +127,7 @@ class _CartPageState extends State<CartPage> {
       return;
     }
     final db = await handler.initializeDB();
-    final cid = box.read('p_userId'); // 카드 결제 연동시 필요요
+    final cid = box.read('p_userId'); // 카드 결제 연동시 필요
 
     // 선택된 상품들 처리
     for (var item in cartItems) {
