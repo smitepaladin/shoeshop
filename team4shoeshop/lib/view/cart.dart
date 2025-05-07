@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:team4shoeshop/model/product.dart';
 import 'package:team4shoeshop/model/orders.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
+import 'package:get_storage/get_storage.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -12,7 +13,8 @@ class CartPage extends StatefulWidget {
 }
 
 class _CartPageState extends State<CartPage> {
-  final DatabaseHandler handler = DatabaseHandler();
+  final DatabaseHandler handler = DatabaseHandler(); // db핸들러
+  final box = GetStorage(); // 로그인한 id정보 들고다니기 위해 스토리지 사용용
   List<Map<String, dynamic>> cartItems = []; // {product: Product, order: Orders}
   Set<String> selectedItems = {}; // 선택된 상품의 oid를 저장
   bool isLoading = true;
@@ -24,12 +26,19 @@ class _CartPageState extends State<CartPage> {
   }
 
   Future<void> _loadCartItems() async {
+    final cid = box.read('p_userId');
+    if (cid == null) {
+      Get.snackbar('알림', '로그인이 필요합니다.');
+      Get.back();
+      return;
+    }
+
     final db = await handler.initializeDB();
     // 장바구니에 있는 주문 목록 가져오기
     final List<Map<String, dynamic>> orders = await db.query(
       'orders',
-      where: 'ocartbool = ?',
-      whereArgs: [1],
+      where: 'ocartbool = ? AND ocid = ?',
+      whereArgs: [1, cid],
     );
 
     List<Map<String, dynamic>> items = [];
@@ -112,20 +121,50 @@ class _CartPageState extends State<CartPage> {
     });
   }
 
-  _proceedToCheckout() {
+  Future<void> _proceedToCheckout() async {
     if (selectedItems.isEmpty) {
       Get.snackbar('알림', '결제할 상품을 선택해주세요.');
       return;
     }
+    final db = await handler.initializeDB();
+    final cid = box.read('p_userId'); // 카드 결제 연동시 필요요
 
-    // 선택된 상품들만 필터링
-    final selectedProducts = cartItems.where((item) {
+    // 선택된 상품들 처리
+    for (var item in cartItems) {
       final order = item['order'] as Orders;
-      return selectedItems.contains(order.oid.toString());
-    }).toList();
+      if (selectedItems.contains(order.oid.toString())) {
+        // 장바구니에서 제거
+        await db.update(
+          'orders',
+          {'ocartbool': 0},
+          where: 'oid = ?',
+          whereArgs: [order.oid],
+        );
 
-    // 결제 페이지로 이동
-    Get.toNamed('/checkout', arguments: selectedProducts);
+        // 주문 상태 업데이트
+        await db.update(
+          'orders',
+          {
+            'ostatus': '결제완료',
+            'odate': DateTime.now().toIso8601String(),
+          },
+          where: 'oid = ?',
+          whereArgs: [order.oid],
+        );
+
+        // 재고 차감
+        final product = item['product'] as Product;
+        await db.update(
+          'product',
+          {'pstock': product.pstock - order.ocount},
+          where: 'pid = ?',
+          whereArgs: [product.pid],
+        );
+      }
+    }
+
+    Get.snackbar('결제 완료', '선택한 상품이 결제되었습니다.', duration: Duration(seconds: 1));
+    await _loadCartItems(); // 장바구니 새로고침
   }
 
   @override
