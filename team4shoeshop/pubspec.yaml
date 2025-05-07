@@ -28,6 +28,8 @@ environment:
 # the latest version available on pub.dev. To see which dependencies have newer
 # versions available, run `flutter pub outdated`.
 dependencies:
+  remedi_kopo: ^0.0.2
+  
   flutter:
     sdk: flutter
 
@@ -70,7 +72,7 @@ dependencies:
   
   #syncfusion_flutter_charts
   syncfusion_flutter_charts: ^29.1.38
-
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter
