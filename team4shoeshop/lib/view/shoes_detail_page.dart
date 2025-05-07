@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:team4shoeshop/model/product.dart';
-import 'package:team4shoeshop/model/orders.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:get_storage/get_storage.dart';
 import 'buy.dart';
@@ -9,15 +8,9 @@ import 'cart.dart';
 
 class ShoesDetailPage extends StatefulWidget {
   final Product product;
+  
+  const ShoesDetailPage({required this.product, super.key});
 
-  const ShoesDetailPage({super.key, required this.product});
-
-  @override
-  State<ShoesDetailPage> createState() => _ShoesDetailPageState();
-}
-
-class _ShoesDetailPageState extends State<ShoesDetailPage> {
-  int selectedCount = 1;
   @override
   State<ShoesDetailPage> createState() => _ShoesDetailPageState();
 }
@@ -59,7 +52,6 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
 
   @override
   Widget build(BuildContext context) {
-    final product = widget.product;
     return Scaffold(
       appBar: AppBar(
         title: Text('상품 상세'),
@@ -82,11 +74,6 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
                       borderRadius: BorderRadius.circular(12),
                       child: Image.memory(
                         widget.product.pimage,
-              child: product.pimage.isNotEmpty
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(12),
-                      child: Image.memory(
-                        product.pimage,
                         fit: BoxFit.cover,
                         width: double.infinity,
                       ),
@@ -99,10 +86,6 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
                           textAlign: TextAlign.center,
                           style: TextStyle(fontSize: 16),
                         ),
-                      child: const Center(
-                        child: Text('신발\n이미지',
-                            textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 16)),
                       ),
                     ),
             ),
@@ -143,15 +126,6 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
                     if (value != null) {
                       setState(() {
                         selectedQuantity = value;
-                  value: selectedCount,
-                  items: List.generate(product.pstock, (i) => i + 1)
-                      .map((e) =>
-                          DropdownMenuItem(value: e, child: Text('$e')))
-                      .toList(),
-                  onChanged: (v) {
-                    if (v != null) {
-                      setState(() {
-                        selectedCount = v;
                       });
                     }
                   },
@@ -163,7 +137,6 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
               children: [
                 Text('가격', style: TextStyle(fontWeight: FontWeight.bold)),
                 Text('${widget.product.pprice}원'),
-                Text('${product.pprice * selectedCount}원'),
               ],
             ),
             const Spacer(),
@@ -172,22 +145,10 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
               children: [
                 ElevatedButton(
                   onPressed: _addToCart,
-                  onPressed: () {
-                    // 장바구니 담기 기능 구현 예정
-                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.purple[100],
                   ),
-                  child: const Text('장바구니 담기'),
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Get.to(() => const BuyPage(), arguments: {
-                      'product': product,
-                      'count': selectedCount, // 구매 수량도 전달
-                    });
-                  },
-                  child: const Text("구매하기"),
+                  child: Text('장바구니 담기'),
                 ),
                 ElevatedButton(
                   onPressed: () {
