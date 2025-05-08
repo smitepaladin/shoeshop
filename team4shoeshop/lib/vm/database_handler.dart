@@ -25,7 +25,7 @@ class DatabaseHandler {
           'astatus': '팀장승인', 
           'adate': '2025-05-07', 
           'ateamappdate': '2025-05-07', 
-          'achiefappdate': '2025-05-08', 
+          'achiefappdate': null, 
         });
 
         await db.insert('approval', {
@@ -36,8 +36,8 @@ class DatabaseHandler {
           'asoojoo': 0, 
           'astatus': '대기', 
           'adate': '2025-05-06', 
-          'ateamappdate': '2025-05-06', 
-          'achiefappdate': '2025-05-07', 
+          'ateamappdate': null, 
+          'achiefappdate': null, 
         });
 
         await db.insert('approval', {
@@ -60,8 +60,8 @@ class DatabaseHandler {
           'asoojoo': 0, 
           'astatus': '대기', 
           'adate': '2025-05-08', 
-          'ateamappdate': '2025-05-08', 
-          'achiefappdate': '2025-05-09', 
+          'ateamappdate': null, 
+          'achiefappdate': null, 
         });
 
         await db.insert('approval', {
@@ -72,7 +72,7 @@ class DatabaseHandler {
           'asoojoo': 0, 
           'astatus': '대기', 
           'adate': '2025-05-09', 
-          'ateamappdate': '2025-05-09', 
+          'ateamappdate': null, 
           'achiefappdate': null, 
         });
 
@@ -637,7 +637,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
     );
     return queryResult.map((e) => Orders.fromMap(e)).toList();
   }
-
+  
   // 주문된 상품 ID로 상품 정보 조회
   Future<Product?> getProductByPid(String pid) async {
     final Database db = await initializeDB();
