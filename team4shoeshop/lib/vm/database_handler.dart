@@ -676,4 +676,23 @@ Future<void> insertDefaultProductsIfEmpty() async {
     );
     return result.isNotEmpty;
   }
+
+  // 특정날짜 데이터가져오는 매서드추가 2025.4.10 이런식으로기입
+Future<List<Map<String, dynamic>>> getSalesByShop(String date) async {
+  final db = await initializeDB();
+  final result = await db.rawQuery('''
+    SELECT 
+      e.eid, 
+      e.ename, 
+      SUM(p.pprice * o.ocount) AS total 
+    FROM orders o 
+    JOIN product p ON o.opid = p.pid 
+    JOIN employee e ON o.oeid = e.eid 
+    WHERE o.odate = ? 
+    GROUP BY e.eid 
+    ORDER BY total DESC
+  ''', [date]);
+
+  return result;
+}
 }
