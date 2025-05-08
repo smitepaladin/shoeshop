@@ -616,14 +616,14 @@ Future<void> insertDefaultProductsIfEmpty() async {
 
     if (existing.isEmpty) {
       await db.insert('factory', {
-        'fid': 'F001',
-        'fbrand': 'Nike',
+        'fid': 'f001',
+        'fbrand': '나이키',
         'fphone': '02-1234-5678',
       });
 
       await db.insert('factory', {
-        'fid': 'F002',
-        'fbrand': 'Adidas',
+        'fid': 'f002',
+        'fbrand': '아디다스',
         'fphone': '02-8765-4321',
       });
     }
