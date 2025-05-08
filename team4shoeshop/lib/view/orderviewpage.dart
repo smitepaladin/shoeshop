@@ -26,7 +26,9 @@ class _OrderViewPageState extends State<OrderViewPage> {
   Future<List<Map<String, dynamic>>> fetchOrderWithProduct() async {
     final cid = box.read('p_userId');
     if (cid == null) {
-      Get.snackbar('알림', '로그인이 필요합니다.');
+      Get.snackbar('알림', '로그인이 필요합니다.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       Get.back();
       return [];
     }
@@ -62,6 +64,7 @@ class _OrderViewPageState extends State<OrderViewPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.brown[50],
       appBar: AppBar(
         title: Text('내 주문 내역'),
         centerTitle: true,
@@ -173,10 +176,13 @@ class _OrderViewPageState extends State<OrderViewPage> {
         },
       ),
       bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: EdgeInsets.all(15.0),
         child: ElevatedButton(
           onPressed: () => Get.back(),
-          child: Text('홈'),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green[100],
+          ),
+          child: Text('상품 구매 화면'),
         ),
       ),
     );

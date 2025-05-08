@@ -7,11 +7,10 @@ import 'package:team4shoeshop/vm/database_handler.dart'; // ← DB 핸들러 경
 void main() async {
   // Flutter에서 async 초기화할 때 필수
   WidgetsFlutterBinding.ensureInitialized();
-
+  await GetStorage.init(); 
   // DB 초기화 및 기본 상품 샘플 등록
   final handler = DatabaseHandler();
   await handler.initializeDB();
-  await GetStorage.init(); 
   await handler.insertDefaultProductsIfEmpty(); // 샘플 상품 자동 삽입
   await handler.insertDefaultEmployeesIfEmpty(); // 샘플 emplyee 데이터 삽입.
   await handler.insertDefaultFactoriesIfEmpty(); // 샘플 factory 데이터 삽입.

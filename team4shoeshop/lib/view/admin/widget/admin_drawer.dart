@@ -12,9 +12,9 @@ import 'package:team4shoeshop/view/admin/admin_inven.dart';
 import 'package:team4shoeshop/view/admin/admin_main.dart';
 import 'package:team4shoeshop/view/admin/admin_return.dart';
 import 'package:team4shoeshop/view/admin/admin_sales.dart';
+import 'package:team4shoeshop/view/admin/admin_product_insert.dart';
 import 'package:team4shoeshop/view/adminlogin.dart';
 
-// 다른 페이지에서도 사용용 가능한 Drawer 위젯
 class AdminDrawer extends StatelessWidget {
   final box = GetStorage();
   AdminDrawer({super.key});
@@ -28,20 +28,20 @@ class AdminDrawer extends StatelessWidget {
           UserAccountsDrawerHeader(
             accountName: Text(box.read('adminName') ?? '로그인 필요'),
             accountEmail: Text(box.read('adminId') ?? ''),
-            currentAccountPicture: CircleAvatar(
+            currentAccountPicture: const CircleAvatar(
               child: Icon(Icons.person),
             ),
           ),
           ListTile(
-            leading: Icon(Icons.shopping_bag),
-            title: Text('메인 화면'),
+            leading: const Icon(Icons.shopping_bag),
+            title: const Text('메인 화면'),
             onTap: () {
               Get.off(AdminMain());
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_bag),
-            title: Text('전체 재고 현황'),
+            leading: const Icon(Icons.inventory),
+            title: const Text('전체 재고 현황'),
             onTap: () {
               Get.off(AdminInven());
             },
@@ -54,46 +54,53 @@ class AdminDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: Icon(Icons.receipt_long),
-            title: Text('기안 및 결재'),
+            leading: const Icon(Icons.receipt_long),
+            title: const Text('기안 및 결재'),
             onTap: () {
               Get.off(AdminApproval());
             },
           ),
           ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('반품 내역'),
+            leading: const Icon(Icons.shopping_cart),
+            title: const Text('반품 내역'),
             onTap: () {
               Get.off(AdminReturn());
             },
           ),
           ListTile(
-            leading: Icon(Icons.location_on),
-            title: Text('일자별 매출 현황'),
+            leading: const Icon(Icons.calendar_today),
+            title: const Text('일자별 매출 현황'),
             onTap: () {
               Get.to(AdminDailyRevenue());
             },
           ),
           ListTile(
-            leading: Icon(Icons.assignment_return),
-            title: Text('지점별 매출 현황'),
+            leading: const Icon(Icons.store),
+            title: const Text('지점별 매출 현황'),
             onTap: () {
               Get.to(AdminDealerRevenue());
             },
           ),
           ListTile(
-            leading: Icon(Icons.assignment_return),
-            title: Text('상품별 매출 현황'),
+            leading: const Icon(Icons.shopping_basket),
+            title: const Text('상품별 매출 현황'),
             onTap: () {
               Get.to(AdminGoodsRevenue());
             },
           ),
           ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('로그아웃'),
+            leading: const Icon(Icons.add_box),
+            title: const Text('상품 등록'), // ✅ 추가 메뉴
+            onTap: () {
+              Get.to(const AdminProductInsert());
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: const Text('로그아웃'),
             onTap: () {
               box.erase();
-              Get.offAll(Adminlogin()); // 첫 화면으로 이동(로그인)
+              Get.offAll(Adminlogin());
             },
           ),
         ],
@@ -101,3 +108,5 @@ class AdminDrawer extends StatelessWidget {
     );
   }
 }
+
+// 더미 //

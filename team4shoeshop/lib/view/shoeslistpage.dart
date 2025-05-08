@@ -8,7 +8,6 @@ import 'package:team4shoeshop/view/returns.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:team4shoeshop/view/shoes_detail_page.dart';
 import 'package:team4shoeshop/view/orderviewpage.dart';
-
 import 'cart.dart';
 
 // 다른 페이지에서도 사용용 가능한 Drawer 위젯
@@ -95,6 +94,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
   late List<Product> _products; // 전체 상품 목록
   late List<Product> _filteredProducts; // 검색 필터링된 상품 목록
   late String _searchText; // 검색어 텍스트
+  Map<String, int> selectedSizes = {}; // 제품별 선택된 사이즈 저장
 
   @override // 변수 초기화
   void initState() {
@@ -105,10 +105,144 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     _searchText = '';
   }
 
+  // 드롭다운에서 사용할 사이즈 옵션 리스트 함수
+  // 230~270까지 10단위로 5개 값 제공
+  List<int> getSizeOptions() {
+    return List.generate(5, (index) => 230 + (index * 10));
+  }
+
+  // 상품 카드 위젯 생성
+  Widget _buildProductCard(Product product) {
+    // 10단위 사이즈 리스트 (getSizeOptions 함수 사용)
+    final List<int> sizeOptions = getSizeOptions();
+    // product.psize가 10단위가 아니면 가장 가까운 10단위로 보정
+    int defaultSize = ((product.psize / 10).round() * 10).clamp(230, 270);
+    int selectedSize = selectedSizes[product.pid] ?? defaultSize;
+    // 만약 selectedSize가 옵션에 없다면, 가장 가까운 값으로 대체
+    if (!sizeOptions.contains(selectedSize)) {
+      selectedSize = defaultSize;
+    }
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+        side: BorderSide(color: Colors.black, width: 2),
+      ),
+      child: InkWell(
+        onTap: () {
+          Get.to(() => ShoesDetailPage(
+            product: product,
+            selectedSize: selectedSize,
+          ));
+        },
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // 이미지 영역을 더 크게 (flex: 7)
+              Expanded(
+                flex: 7,
+                child: product.pimage.isNotEmpty
+                    ? ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.memory(
+                          product.pimage,
+                          fit: BoxFit.cover,
+                          width: double.infinity,
+                        ),
+                      )
+                    : Container(
+                        decoration: BoxDecoration(
+                          color: Colors.pink[100],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Center(
+                          child: Text(
+                            '신발\n이미지',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                      ),
+              ),
+              SizedBox(height: 8),
+              // 상품명, 가격, 색상
+              Expanded(
+                flex: 5,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      product.pname,
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14,
+                      ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    Text(
+                      '${product.pprice}원',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      '색상: ${product.pcolor}',
+                      style: TextStyle(fontSize: 12),
+                    ),
+                    SizedBox(height: 2),
+                    // 드롭다운 최소화
+                    Row(
+                      children: [
+                        Text('사이즈:', style: TextStyle(fontSize: 11)),
+                        SizedBox(width: 2),
+                        Container(
+                          padding: EdgeInsets.symmetric(horizontal: 2),
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 0.7),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                          child: DropdownButton<int>(
+                            value: selectedSize,
+                            isDense: true,
+                            iconSize: 16,
+                            style: TextStyle(fontSize: 11, color: Colors.black),
+                            underline: SizedBox(),
+                            dropdownColor: Colors.white,
+                            items: sizeOptions
+                                .map((size) => DropdownMenuItem(
+                                      value: size,
+                                      child: Text('$size'),
+                                    ))
+                                .toList(),
+                            onChanged: (value) {
+                              if (value != null) {
+                                setState(() {
+                                  selectedSizes[product.pid] = value;
+                                });
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
   // 드로우바 다른데서도 사용가능한 위젯으로 만듬 drawer: MainDrawer()
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.brown[50],
       drawer: MainDrawer(),
       appBar: AppBar(
         title: Text('상품 구매 화면'),
@@ -177,60 +311,11 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                     crossAxisCount: 2,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
-                    childAspectRatio: 0.8,
+                    childAspectRatio: 0.68, // 이미지가 더 크게
                   ),
                   itemCount: _filteredProducts.length,
                   itemBuilder: (context, index) {
-                    final product = _filteredProducts[index];
-                    return GestureDetector(
-                      onTap: () {
-                        Get.to(() => ShoesDetailPage(product: product));
-                      },
-                      child: Card(
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: Colors.black, width: 2),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Expanded(
-                                child:
-                                    product.pimage.isNotEmpty
-                                        ? ClipRRect(
-                                          borderRadius: BorderRadius.circular(
-                                            12,
-                                          ),
-                                          child: Image.memory(
-                                            product.pimage,
-                                            fit: BoxFit.cover,
-                                            width: double.infinity,
-                                          ),
-                                        )
-                                        : Container(
-                                          color: Colors.pink[100],
-                                          child: Center(
-                                            child: Text(
-                                              '신발\n이미지',
-                                              textAlign: TextAlign.center,
-                                              style: TextStyle(fontSize: 16),
-                                            ),
-                                          ),
-                                        ),
-                              ),
-                              SizedBox(height: 8),
-                              Text(
-                                product.pname,
-                                style: TextStyle(fontWeight: FontWeight.bold),
-                              ),
-                              Text('가격: ${product.pprice}원'),
-                              Text('색상: ${product.pcolor}'),
-                            ],
-                          ),
-                        ),
-                      ),
-                    );
+                    return _buildProductCard(_filteredProducts[index]);
                   },
                 );
               },
@@ -241,3 +326,4 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     );
   }
 }
+// 더미 //
