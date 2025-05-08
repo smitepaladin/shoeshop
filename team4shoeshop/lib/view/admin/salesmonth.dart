@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 import 'oreturn.dart';
 import 'receive.dart';
-import 'salestoday.dart';
 
 class SalesmonthPage extends StatefulWidget {
   const SalesmonthPage({super.key});
@@ -25,10 +24,6 @@ DrawerHeader(child: Text('cba 신발 상점')),
 ListTile(
 title: Text('상품 수령 목록'),
 onTap: () => Get.to(() => ReceivePage()),
-),
-ListTile(
-title: Text('지점 일매출 현황'),
-onTap: () => Get.to(() => SalestodayPage()),
 ),
 ListTile(
 title: Text('지점 월매출 현황'),
