@@ -18,6 +18,8 @@ class _AdminSalesState extends State<AdminSales> {
     handler = DatabaseHandler();
   }
 
+
+// GPT 테스트 주석
   @override
   Widget build(BuildContext context) {
     return Scaffold(
