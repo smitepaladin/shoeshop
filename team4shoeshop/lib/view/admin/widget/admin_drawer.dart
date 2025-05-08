@@ -27,8 +27,8 @@ class AdminDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(adminId.isNotEmpty ? adminId : '로그인 필요'),
-            accountEmail: null,
+            accountName: Text(box.read('adminName') ?? '로그인 필요'),
+            accountEmail: Text(box.read('adminId') ?? ''),
             currentAccountPicture: CircleAvatar(
               child: Icon(Icons.person),
             ),

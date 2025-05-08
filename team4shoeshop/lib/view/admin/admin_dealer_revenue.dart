@@ -35,7 +35,7 @@ class _AdminDealerRevenueState extends State<AdminDealerRevenue> {
       JOIN product p ON o.opid = p.pid
       JOIN employee e ON o.oeid = e.eid
       WHERE o.ostatus = '결제완료'
-        AND substr(o.odate, 1, 7) = '${selectedYear}-${selectedMonth}'
+        AND substr(o.odate, 1, 7) = '$selectedYear-$selectedMonth'
         AND e.eid NOT IN ('h001', 'h002', 'h003')
       GROUP BY e.ename
       ORDER BY total DESC

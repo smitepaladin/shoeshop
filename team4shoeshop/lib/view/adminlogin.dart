@@ -18,7 +18,6 @@ class _AdminloginState extends State<Adminlogin> {
   late TextEditingController adminIdController;
   late TextEditingController adminpasswordController;
   late DatabaseHandler handler;
-
   final box = GetStorage();
 
   @override
@@ -27,23 +26,11 @@ class _AdminloginState extends State<Adminlogin> {
     adminIdController = TextEditingController();
     adminpasswordController = TextEditingController();
     handler = DatabaseHandler();
-    // 초기화
-    initStorage();
-  }
-
-  initStorage(){ 
-    box.write('adminId', ""); // 초기값을 비어있는걸로 지정
-    box.write('adminPassword', "");
   }
 
   @override
   void dispose() {
-    disposeStorage(); // 앱 종료할 때 지우기
     super.dispose();
-  }
-
-  disposeStorage(){
-    box.erase();
   }
 
   Future<bool> validateAdmin(String id, String password) async {
@@ -55,8 +42,11 @@ class _AdminloginState extends State<Adminlogin> {
     );
     
     if (result.isNotEmpty) {
-      final employee = Employee.fromMap(result.first); // 화면에 관리자 이름 권한 추가시 필요함
-      // 본사 직원(emp001, emp002, emp003) 또는 대리점 직원만 로그인 가능
+      final employee = Employee.fromMap(result.first);
+      box.write('adminId', employee.eid);
+      box.write('adminName', employee.ename);
+      box.write('adminPermission', employee.epermission);
+      // 본사 직원(h001, h002, h003) 또는 대리점 직원만 로그인 가능
       return true;
     }
     return false;
@@ -154,7 +144,6 @@ class _AdminloginState extends State<Adminlogin> {
         TextButton(
           onPressed: () {
             Get.back(); // 다이얼로그 지우기
-            saveStorage(); // Id, Password 저장
             Get.off(AdminMain()); // 화면 이동
           }, 
           child: Text('Exit'),
@@ -162,9 +151,4 @@ class _AdminloginState extends State<Adminlogin> {
       ]
     );
   }
-
-  saveStorage(){
-    box.write('adminId', adminIdController.text);
-  }
-  
 } // class

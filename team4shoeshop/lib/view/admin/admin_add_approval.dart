@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';

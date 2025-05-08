@@ -638,6 +638,16 @@ Future<void> insertDefaultProductsIfEmpty() async {
     return queryResult.map((e) => Orders.fromMap(e)).toList();
   }
   
+  // 재고 현황 조회
+  Future<List<Product>> fetchInventory() async {
+    final Database db = await initializeDB();
+    final List<Map<String, dynamic>> products = await db.query(
+      'product',
+      orderBy: 'pstock', // 재고량 기준 오름차순 정렬
+    );
+    return products.map((map) => Product.fromMap(map)).toList();
+  }
+  
   // 주문된 상품 ID로 상품 정보 조회
   Future<Product?> getProductByPid(String pid) async {
     final Database db = await initializeDB();
@@ -695,4 +705,7 @@ Future<List<Map<String, dynamic>>> getSalesByShop(String date) async {
 
   return result;
 }
+
+
+
 }
