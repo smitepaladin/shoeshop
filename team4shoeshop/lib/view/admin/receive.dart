@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:team4shoeshop/view/admin/admim_salastoday.dart';
+import 'package:team4shoeshop/view/admin/salestoday.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_sales.dart';
+import 'package:team4shoeshop/view/adminlogin.dart';
 import 'package:team4shoeshop/view/login.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
 import 'oreturn.dart';
-import 'salesmonth';
-
 class ReceivePage extends StatefulWidget {
   const ReceivePage({super.key});
 
@@ -29,8 +30,8 @@ class _ReceivePageState extends State<ReceivePage> {
       appBar: AppBar(
         title: Text('receivepage'),
       ),
-      drawer: Drawer(
- child: ListView(
+            drawer: Drawer(
+child: ListView(
 children: [
 DrawerHeader(child: Text('cba 신발 상점')),
 ListTile(
@@ -42,12 +43,20 @@ title: Text('반품 처리 현황'),
 onTap: () => Get.to(() => OreturnPage()),
 ),
 ListTile(
-title: Text('로그인 페이지'),
-onTap: () => Get.to(() =>Login()),
+title: Text('일별 매출목록'),
+onTap: () => Get.to(() => SalastodayPage()),
 ),
-          ],
-        ),
-      ),
+ListTile(
+title: Text('월별매출목록'),
+onTap: () => Get.to(() => SalestodayPage()),
+),
+ListTile(
+title: Text('관리자 로그인페이지'),
+onTap: () => Get.to(() => Adminlogin()),
+),
+],
+),
+),
       body: FutureBuilder(
         future: fetchOrders(),
         builder: (context, snapshot) {

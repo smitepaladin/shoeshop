@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:team4shoeshop/view/admin/admim_salastoday.dart';
 import 'package:team4shoeshop/view/admin/receive.dart';
+import 'package:team4shoeshop/view/admin/salestoday.dart';
+import 'package:team4shoeshop/view/adminlogin.dart';
 import 'package:team4shoeshop/view/login.dart';
 
 import '../../../vm/database_handler.dart';
@@ -27,7 +30,7 @@ class _OreturnPageState extends State<OreturnPage> {
         title: Text('receivepage'),
       ),
       drawer: Drawer(
- child: ListView(
+child: ListView(
 children: [
 DrawerHeader(child: Text('cba 신발 상점')),
 ListTile(
@@ -39,12 +42,20 @@ title: Text('반품 처리 현황'),
 onTap: () => Get.to(() => OreturnPage()),
 ),
 ListTile(
-title: Text('로그인 페이지'),
-onTap: () => Get.to(() =>Login()),
+title: Text('일별 매출목록'),
+onTap: () => Get.to(() => SalastodayPage()),
 ),
-          ],
-        ),
-      ),
+ListTile(
+title: Text('월별매출목록'),
+onTap: () => Get.to(() => SalestodayPage()),
+),
+ListTile(
+title: Text('관리자 로그인페이지'),
+onTap: () => Get.to(() => Adminlogin()),
+),
+],
+),
+),
       body: FutureBuilder(
         future: fetchOrders(), //Db에서 받아오는정보들
         builder: (context, snapshot) {

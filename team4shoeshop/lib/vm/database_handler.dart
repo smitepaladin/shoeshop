@@ -688,7 +688,7 @@ Future<List<Map<String, dynamic>>> getSalesByShop(String date) async {
     FROM orders o 
     JOIN product p ON o.opid = p.pid 
     JOIN employee e ON o.oeid = e.eid 
-  WHERE substr(o.odate, 1, 10) = ?
+    WHERE substr(o.odate, 1, 10) = ?
     GROUP BY e.eid 
     ORDER BY total DESC
   ''', [date]);
