@@ -695,4 +695,13 @@ Future<List<Map<String, dynamic>>> getSalesByShop(String date) async {
 
   return result;
 }
+
+  Future<List<Product>> fetchInventory() async {
+    final Database db = await initializeDB();
+    final List<Map<String, dynamic>> products = await db.query(
+      'product',
+      orderBy: 'pstock', // 재고량 기준 오름차순 정렬
+    );
+    return products.map((map) => Product.fromMap(map)).toList();
+  }
 }
