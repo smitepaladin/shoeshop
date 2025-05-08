@@ -199,9 +199,9 @@ class DatabaseHandler {
         await db.insert('orders', {
           'ocid': 'cust001',
           'opid': 'prd001', // 990v5
-          'oeid': 'h001',
+          'oeid': 'd001',
           'ocount': 3,
-          'odate': '2025-05-06',
+          'odate': '2025-04-10',
           'ostatus': '결제완료',
           'ocartbool': 0,
           'oreturncount': 0,
@@ -688,7 +688,7 @@ Future<List<Map<String, dynamic>>> getSalesByShop(String date) async {
     FROM orders o 
     JOIN product p ON o.opid = p.pid 
     JOIN employee e ON o.oeid = e.eid 
-    WHERE o.odate = ? 
+    WHERE substr(o.odate, 1, 10) = ?
     GROUP BY e.eid 
     ORDER BY total DESC
   ''', [date]);
