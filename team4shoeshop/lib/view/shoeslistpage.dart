@@ -8,7 +8,6 @@ import 'package:team4shoeshop/view/returns.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 import 'package:team4shoeshop/view/shoes_detail_page.dart';
 import 'package:team4shoeshop/view/orderviewpage.dart';
-
 import 'cart.dart';
 
 // 다른 페이지에서도 사용용 가능한 Drawer 위젯
@@ -106,12 +105,18 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     _searchText = '';
   }
 
+  // 드롭다운에서 사용할 사이즈 옵션 리스트 함수
+  // 230~270까지 10단위로 5개 값 제공
+  List<int> getSizeOptions() {
+    return List.generate(5, (index) => 230 + (index * 10));
+  }
+
   // 상품 카드 위젯 생성
   Widget _buildProductCard(Product product) {
-    // 10단위 사이즈 리스트
-    final List<int> sizeOptions = List.generate(8, (index) => 220 + (index * 10));
+    // 10단위 사이즈 리스트 (getSizeOptions 함수 사용)
+    final List<int> sizeOptions = getSizeOptions();
     // product.psize가 10단위가 아니면 가장 가까운 10단위로 보정
-    int defaultSize = ((product.psize / 10).round() * 10).clamp(220, 290);
+    int defaultSize = ((product.psize / 10).round() * 10).clamp(230, 270);
     int selectedSize = selectedSizes[product.pid] ?? defaultSize;
     // 만약 selectedSize가 옵션에 없다면, 가장 가까운 값으로 대체
     if (!sizeOptions.contains(selectedSize)) {
