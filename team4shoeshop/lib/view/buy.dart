@@ -119,7 +119,7 @@ class _BuyPageState extends State<BuyPage> {
             'orders',
             {
               'ostatus': '결제완료',
-              'odate': DateTime.now().toIso8601String(),
+              'odate': '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
               'ocartbool': 0,
             },
             where: 'ocid = ? AND opid = ? AND ocartbool = ?',
