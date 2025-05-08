@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_sales.dart';
+import 'package:team4shoeshop/view/login.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
 import 'oreturn.dart';
@@ -34,6 +35,10 @@ class _ReceivePageState extends State<ReceivePage> {
           children: [
             DrawerHeader(child: Text('신발가게')),
             ListTile(
+title: Text('어드민메인화면'),
+onTap: () => Get.to(() => AdminSalesPage()),
+),
+            ListTile(
               title: Text('상품 수령 목록'),
               onTap: () => Get.to(() => ReceivePage()),
             ),
@@ -48,6 +53,10 @@ class _ReceivePageState extends State<ReceivePage> {
             ListTile(
               title: Text('반품 처리 현황'),
               onTap: () => Get.to(() => OreturnPage()),
+            ),
+                        ListTile(
+              title: Text('ㄴㅇㄴㅇ'),
+              onTap: () => Get.to(() => Login()),
             ),
           ],
         ),
