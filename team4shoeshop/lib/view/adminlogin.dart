@@ -37,19 +37,15 @@ class _AdminloginState extends State<Adminlogin> {
 
   @override
   void dispose() {
-    disposeStorage();
     super.dispose();
   }
 
-  void disposeStorage() {
-    box.erase();
-  }
 
   Future<Employee?> validateAdmin(String id, String password) async {
     final db = await handler.initializeDB();
     final result = await db.query(
       'employee',
-      where: 'eid = ? AND epassword = ?',
+      where: 'eid = ? and epassword = ?',
       whereArgs: [id, password],
     );
 
