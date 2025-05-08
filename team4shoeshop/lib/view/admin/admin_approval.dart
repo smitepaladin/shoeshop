@@ -59,9 +59,21 @@ Widget build(BuildContext context) {
                       margin: const EdgeInsets.all(8),
                       child: Padding(
                         padding: const EdgeInsets.all(12),
-                        child: Text(
-                          approval,
-                          style: const TextStyle(fontSize: 16),
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                approval,
+                                style: const TextStyle(fontSize: 16),
+                              ),
+                            ),
+                            ElevatedButton(
+                              onPressed: () {
+                                //
+                              }, 
+                              child: Text('결재'),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -81,7 +93,7 @@ Widget build(BuildContext context) {
 Future<List<String>> getApproval() async {
   final Database db = await handler.initializeDB();
   final result = await db.rawQuery('select a.astatus, p.pbrand, p.pname, p.pcolor, p.psize, a.abaljoo, a.adate from product p, approval a where a.apid=p.pid');
-  return result.map((e) => "${e['astatus']} | ${e['pbrand']} | ${e['pname']} | ${e['pcolor']} | ${e['psize']} | ${e['abaljoo']} | ${e['adate']}").toList();
+  return result.map((e) => "${e['astatus']} | ${e['pbrand']} | ${e['pname']}\n${e['pcolor']} | ${e['psize']} | ${e['abaljoo']}\n${e['adate']}").toList();
 }
 
 } // class
