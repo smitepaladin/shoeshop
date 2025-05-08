@@ -53,18 +53,24 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
 
   Future<void> _addToCart() async {
     if (widget.product.pstock == 0) {
-      Get.snackbar('재고 없음', '해당 상품은 품절입니다.', duration: Duration(seconds: 2));
+      Get.snackbar('재고 없음', '해당 상품은 품절입니다.', 
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
     if (selectedStoreId == null) {
-      Get.snackbar('알림', '대리점을 선택해주세요.', duration: Duration(seconds: 2));
+      Get.snackbar('알림', '대리점을 선택해주세요.', 
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
     final cid = box.read('p_userId');
     if (cid == null) {
-      Get.snackbar('알림', '로그인이 필요합니다.', duration: Duration(seconds: 2));
+      Get.snackbar('알림', '로그인이 필요합니다.', 
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -84,17 +90,23 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
       'oreason': '',
     });
 
-    Get.snackbar('성공', '장바구니에 추가되었습니다.', duration: Duration(seconds: 1));
+    Get.snackbar('성공', '장바구니에 추가되었습니다.', 
+      duration: Duration(seconds: 2),
+      backgroundColor: Colors.blue);
   }
 
   Future<void> _checkAndBuy() async {
     if (widget.product.pstock == 0) {
-      Get.snackbar('재고 없음', '해당 상품은 품절입니다.', duration: Duration(seconds: 2));
+      Get.snackbar('재고 없음', '해당 상품은 품절입니다.', 
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
     if (selectedStoreId == null) {
-      Get.snackbar('알림', '대리점을 선택해주세요.', duration: Duration(seconds: 2));
+      Get.snackbar('알림', '대리점을 선택해주세요.', 
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -103,13 +115,17 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
     final result = await db.query('customer', where: 'cid = ?', whereArgs: [cid]);
 
     if (result.isEmpty) {
-      Get.snackbar('오류', '회원 정보를 찾을 수 없습니다.');
+      Get.snackbar('오류', '회원 정보를 찾을 수 없습니다.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
     final customer = Customer.fromMap(result.first);
     if (customer.ccardnum == 0 || customer.ccardcvc == 0 || customer.ccarddate == 0) {
-      Get.snackbar('카드 정보 없음', '회원정보를 먼저 수정해주세요.', duration: Duration(seconds: 2));
+      Get.snackbar('카드 정보 없음', '회원정보를 먼저 수정해주세요.', 
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       await Future.delayed(Duration(seconds: 1));
       Get.to(() => const EditProfilePage());
       return;
@@ -126,6 +142,7 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.brown[50],
       appBar: AppBar(
         title: Text('상품 상세'),
         centerTitle: true,
@@ -176,12 +193,23 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
                     children: [
                       ElevatedButton(
                         onPressed: _addToCart,
-                        style: ElevatedButton.styleFrom(backgroundColor: Colors.purple[100]),
-                        child: Text('장바구니 담기'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.purple[100],
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text('장바구니'),
                       ),
                       ElevatedButton(
                         onPressed: _checkAndBuy,
-                        child: const Text("구매하기"),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.amberAccent,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        child: Text("구매하기"),
                       ),
                     ],
                   ),

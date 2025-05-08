@@ -57,7 +57,9 @@ class _BuyPageState extends State<BuyPage> {
     }
     
     if (products.isEmpty) {
-      Get.snackbar("에러", "잘못된 접근입니다.");
+      Get.snackbar("에러", "잘못된 접근입니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       Get.back();
       return;
     }
@@ -72,12 +74,16 @@ class _BuyPageState extends State<BuyPage> {
       if (result.isNotEmpty) {
         customer = Customer.fromMap(result.first);
       } else {
-        Get.snackbar("오류", "사용자 정보를 찾을 수 없습니다.");
+        Get.snackbar("오류", "사용자 정보를 찾을 수 없습니다.",
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.blue);
         Get.back();
         return;
       }
     } catch (e) {
-      Get.snackbar("오류", "데이터베이스 오류가 발생했습니다.");
+      Get.snackbar("오류", "데이터베이스 오류가 발생했습니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       Get.back();
       return;
     } finally {
@@ -89,7 +95,9 @@ class _BuyPageState extends State<BuyPage> {
 
   Future<void> _processPurchase() async {
     if (passwordController.text.length != 2) {
-      Get.snackbar("오류", "카드 비밀번호 앞 두 자리를 입력해주세요.");
+      Get.snackbar("오류", "카드 비밀번호 앞 두 자리를 입력해주세요.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -104,12 +112,16 @@ class _BuyPageState extends State<BuyPage> {
         final selectedSize = item['selectedSize'] ?? product.psize;
         // 재고 확인
         if (product.pstock < quantity) {
-          Get.snackbar("오류", "${product.pname}의 재고가 부족합니다.");
+          Get.snackbar("오류", "${product.pname}의 재고가 부족합니다.",
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue);
           return;
         }
         // 대리점 정보 확인
         if (storeId == null || storeId.isEmpty) {
-          Get.snackbar("오류", "대리점 정보가 없습니다.");
+          Get.snackbar("오류", "대리점 정보가 없습니다.",
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue);
           return;
         }
         if (isFromCart) {
@@ -152,11 +164,15 @@ class _BuyPageState extends State<BuyPage> {
         );
       }
 
-      Get.snackbar("구매 완료", "구매가 완료되었습니다.", duration: Duration(seconds: 1));
+      Get.snackbar("구매 완료", "구매가 완료되었습니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       await Future.delayed(Duration(seconds: 1));
       Get.offAll(() => const Shoeslistpage());
     } catch (e) {
-      Get.snackbar("오류", "결제 처리 중 오류가 발생했습니다.");
+      Get.snackbar("오류", "결제 처리 중 오류가 발생했습니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
     }
   }
 

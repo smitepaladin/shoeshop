@@ -242,6 +242,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.brown[50],
       drawer: MainDrawer(),
       appBar: AppBar(
         title: Text('상품 구매 화면'),
