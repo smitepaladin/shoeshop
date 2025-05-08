@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/approval.dart';
 import 'package:team4shoeshop/view/admin/admin_approval.dart';
@@ -17,6 +19,7 @@ class _AdminAddApprovalState extends State<AdminAddApproval> {
   late String selectedProduct; // 드롭다운에서 선택한 상품
   late TextEditingController controller; // 수량 입력
   List<String> productList = []; // 재고 30개 미만 상품명
+  final box = GetStorage();
 
   @override
   void initState() {
@@ -109,6 +112,7 @@ Widget build(BuildContext context) {
                 insertAction();
                 Get.off(AdminApproval());
                 Get.snackbar('전송 성공', '품의서를 전송했습니다');
+                setState(() {});
                 }
               }, 
               child: Text('전송'),
@@ -153,8 +157,9 @@ Widget build(BuildContext context) {
   
 
   insertAction()async{
+    final String eid = box.read('adminId');
     var approvalInsert = Approval(
-      aeid: '', 
+      aeid: eid, 
       afid: (await getFidByProductName(selectedProduct))!, 
       abaljoo: int.parse(controller.text), 
       asoojoo: 0, 
