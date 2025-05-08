@@ -238,4 +238,3 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
     );
   }
 }
-
