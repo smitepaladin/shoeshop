@@ -100,19 +100,18 @@ class _BuyPageState extends State<BuyPage> {
         final product = item['product'] as Product;
         final quantity = item['quantity'] as int;
         final storeId = item['storeId'] as String?;
-
+        // 선택한 사이즈 정보 추출 (없으면 product.psize)
+        final selectedSize = item['selectedSize'] ?? product.psize;
         // 재고 확인
         if (product.pstock < quantity) {
           Get.snackbar("오류", "${product.pname}의 재고가 부족합니다.");
           return;
         }
-
         // 대리점 정보 확인
         if (storeId == null || storeId.isEmpty) {
           Get.snackbar("오류", "대리점 정보가 없습니다.");
           return;
         }
-
         if (isFromCart) {
           // 장바구니에서 온 경우: 기존 주문 업데이트
           await db.update(
@@ -121,6 +120,8 @@ class _BuyPageState extends State<BuyPage> {
               'ostatus': '결제완료',
               'odate': '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
               'ocartbool': 0,
+              'oreturncount': 0,
+              'oreason': 'size:$selectedSize', // 사이즈 정보 저장
             },
             where: 'ocid = ? AND opid = ? AND ocartbool = ?',
             whereArgs: [cid, product.pid, 1],
@@ -139,10 +140,9 @@ class _BuyPageState extends State<BuyPage> {
             'oreturndate': '',
             'oreturnstatus': '',
             'odefectivereason': '',
-            'oreason': '',
+            'oreason': 'size:$selectedSize', // 사이즈 정보 저장
           });
         }
-
         // product 테이블 재고 차감
         await db.update(
           'product',

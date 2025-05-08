@@ -74,7 +74,7 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
       'opid': widget.product.pid,
       'oeid': selectedStoreId,
       'ocount': selectedQuantity,
-      'odate': DateTime.now().toIso8601String(),
+      'odate': DateTime.now().toString().substring(0,10),
       'ostatus': '장바구니',
       'ocartbool': 1,
       'oreturncount': 0,
