@@ -38,10 +38,12 @@ Widget build(BuildContext context) {
         backgroundColor: Colors.white,
         actions: [
           IconButton(
-            onPressed: () {
+            onPressed: () async{
               final adminPermission = box.read('adminPermission');
               if(adminPermission == 1){
-                Get.to(AdminAddApproval())?.then((value) => setState(() {}));
+                await Get.to(AdminAddApproval());
+                await getApproval();
+                setState(() {});
               }else{
                 Get.snackbar(
                   '권한 불일치', '권한이 없습니다.',
