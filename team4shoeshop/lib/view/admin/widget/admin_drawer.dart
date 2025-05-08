@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/view/admin/admin_approval.dart';
 import 'package:team4shoeshop/view/admin/admin_daily_revenue.dart';
+import 'package:team4shoeshop/view/admin/admin_dealer_revenue.dart';
+import 'package:team4shoeshop/view/admin/admin_goods_revenue.dart';
 import 'package:team4shoeshop/view/admin/admin_inven.dart';
 import 'package:team4shoeshop/view/admin/admin_main.dart';
 import 'package:team4shoeshop/view/admin/admin_return.dart';
@@ -77,14 +79,14 @@ class AdminDrawer extends StatelessWidget {
             leading: Icon(Icons.assignment_return),
             title: Text('지점별 매출 현황'),
             onTap: () {
-              //
+              Get.to(AdminDealerRevenue());
             },
           ),
           ListTile(
             leading: Icon(Icons.assignment_return),
             title: Text('상품별 매출 현황'),
             onTap: () {
-              //
+              Get.to(AdminGoodsRevenue());
             },
           ),
           ListTile(
