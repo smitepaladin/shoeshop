@@ -57,7 +57,9 @@ class _BuyPageState extends State<BuyPage> {
     }
     
     if (products.isEmpty) {
-      Get.snackbar("에러", "잘못된 접근입니다.");
+      Get.snackbar("에러", "잘못된 접근입니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       Get.back();
       return;
     }
@@ -72,12 +74,16 @@ class _BuyPageState extends State<BuyPage> {
       if (result.isNotEmpty) {
         customer = Customer.fromMap(result.first);
       } else {
-        Get.snackbar("오류", "사용자 정보를 찾을 수 없습니다.");
+        Get.snackbar("오류", "사용자 정보를 찾을 수 없습니다.",
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.blue);
         Get.back();
         return;
       }
     } catch (e) {
-      Get.snackbar("오류", "데이터베이스 오류가 발생했습니다.");
+      Get.snackbar("오류", "데이터베이스 오류가 발생했습니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       Get.back();
       return;
     } finally {
@@ -89,7 +95,9 @@ class _BuyPageState extends State<BuyPage> {
 
   Future<void> _processPurchase() async {
     if (passwordController.text.length != 2) {
-      Get.snackbar("오류", "카드 비밀번호 앞 두 자리를 입력해주세요.");
+      Get.snackbar("오류", "카드 비밀번호 앞 두 자리를 입력해주세요.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -100,19 +108,22 @@ class _BuyPageState extends State<BuyPage> {
         final product = item['product'] as Product;
         final quantity = item['quantity'] as int;
         final storeId = item['storeId'] as String?;
-
+        // 선택한 사이즈 정보 추출 (없으면 product.psize)
+        final selectedSize = item['selectedSize'] ?? product.psize;
         // 재고 확인
         if (product.pstock < quantity) {
-          Get.snackbar("오류", "${product.pname}의 재고가 부족합니다.");
+          Get.snackbar("오류", "${product.pname}의 재고가 부족합니다.",
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue);
           return;
         }
-
         // 대리점 정보 확인
         if (storeId == null || storeId.isEmpty) {
-          Get.snackbar("오류", "대리점 정보가 없습니다.");
+          Get.snackbar("오류", "대리점 정보가 없습니다.",
+            duration: Duration(seconds: 2),
+            backgroundColor: Colors.blue);
           return;
         }
-
         if (isFromCart) {
           // 장바구니에서 온 경우: 기존 주문 업데이트
           await db.update(
@@ -121,6 +132,8 @@ class _BuyPageState extends State<BuyPage> {
               'ostatus': '결제완료',
               'odate': '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
               'ocartbool': 0,
+              'oreturncount': 0,
+              'oreason': 'size:$selectedSize', // 사이즈 정보 저장
             },
             where: 'ocid = ? AND opid = ? AND ocartbool = ?',
             whereArgs: [cid, product.pid, 1],
@@ -139,10 +152,9 @@ class _BuyPageState extends State<BuyPage> {
             'oreturndate': '',
             'oreturnstatus': '',
             'odefectivereason': '',
-            'oreason': '',
+            'oreason': 'size:$selectedSize', // 사이즈 정보 저장
           });
         }
-
         // product 테이블 재고 차감
         await db.update(
           'product',
@@ -152,11 +164,15 @@ class _BuyPageState extends State<BuyPage> {
         );
       }
 
-      Get.snackbar("구매 완료", "구매가 완료되었습니다.", duration: Duration(seconds: 1));
+      Get.snackbar("구매 완료", "구매가 완료되었습니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       await Future.delayed(Duration(seconds: 1));
       Get.offAll(() => const Shoeslistpage());
     } catch (e) {
-      Get.snackbar("오류", "결제 처리 중 오류가 발생했습니다.");
+      Get.snackbar("오류", "결제 처리 중 오류가 발생했습니다.",
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
     }
   }
 

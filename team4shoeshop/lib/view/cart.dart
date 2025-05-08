@@ -31,7 +31,9 @@ class _CartPageState extends State<CartPage> {
   Future<void> _loadCartItems() async {
     final cid = box.read('p_userId');
     if (cid == null) {
-      Get.snackbar('알림', '로그인이 필요합니다.');
+      Get.snackbar('알림', '로그인이 필요합니다.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       Get.back();
       return;
     }
@@ -39,7 +41,7 @@ class _CartPageState extends State<CartPage> {
     final db = await handler.initializeDB();
     final List<Map<String, dynamic>> orders = await db.query(
       'orders',
-      where: 'ocartbool = ? AND ocid = ?',
+      where: 'ocartbool = ? and ocid = ?',
       whereArgs: [1, cid],
     );
 
@@ -60,11 +62,9 @@ class _CartPageState extends State<CartPage> {
         });
       }
     }
-
-    setState(() {
       cartItems = items;
       isLoading = false;
-    });
+    setState(() { });
   }
 
   Future<void> _removeFromCart(String oid) async {
@@ -134,7 +134,9 @@ class _CartPageState extends State<CartPage> {
   Future<void> _checkCardInfoAndProceed() async {
     final cid = box.read('p_userId');
     if (cid == null) {
-      Get.snackbar('알림', '로그인이 필요합니다.');
+      Get.snackbar('알림', '로그인이 필요합니다.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -146,13 +148,17 @@ class _CartPageState extends State<CartPage> {
     );
 
     if (result.isEmpty) {
-      Get.snackbar('오류', '사용자 정보를 찾을 수 없습니다.');
+      Get.snackbar('오류', '사용자 정보를 찾을 수 없습니다.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
     final customer = result.first;
     if (customer['ccardnum'] == 0 || customer['ccardcvc'] == 0 || customer['ccarddate'] == 0) {
-      Get.snackbar('카드 정보 없음', '회원정보를 먼저 수정해주세요.');
+      Get.snackbar('카드 정보 없음', '회원정보를 먼저 수정해주세요.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       await Future.delayed(Duration(seconds: 1));
       Get.to(() => const EditProfilePage());
       return;
@@ -173,7 +179,9 @@ class _CartPageState extends State<CartPage> {
     }).toList();
 
     if (selectedProducts.isEmpty) {
-      Get.snackbar('알림', '선택된 상품이 없습니다.');
+      Get.snackbar('알림', '선택된 상품이 없습니다.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -182,7 +190,9 @@ class _CartPageState extends State<CartPage> {
       final product = item['product'] as Product;
       final quantity = item['quantity'] as int;
       if (quantity > product.pstock) {
-        Get.snackbar('재고 부족', '${product.pname}의 재고가 부족합니다.');
+        Get.snackbar('재고 부족', '${product.pname}의 재고가 부족합니다.',
+          duration: Duration(seconds: 2),
+          backgroundColor: Colors.blue);
         return;
       }
     }
@@ -196,7 +206,9 @@ class _CartPageState extends State<CartPage> {
 
   Future<void> _proceedToCheckout() async {
     if (selectedItems.isEmpty) {
-      Get.snackbar('알림', '결제할 상품을 선택해주세요.');
+      Get.snackbar('알림', '결제할 상품을 선택해주세요.',
+        duration: Duration(seconds: 2),
+        backgroundColor: Colors.blue);
       return;
     }
 
@@ -206,6 +218,7 @@ class _CartPageState extends State<CartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.brown[50],
       appBar: AppBar(
         title: const Text('장바구니'),
         actions: [
