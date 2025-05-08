@@ -25,7 +25,7 @@ class DatabaseHandler {
           'astatus': '팀장승인', 
           'adate': '2025-05-07', 
           'ateamappdate': '2025-05-07', 
-          'achiefappdate': null, 
+          'achiefappdate': '2025-05-08', 
         });
 
         await db.insert('approval', {
@@ -36,8 +36,8 @@ class DatabaseHandler {
           'asoojoo': 0, 
           'astatus': '대기', 
           'adate': '2025-05-06', 
-          'ateamappdate': null, 
-          'achiefappdate': null, 
+          'ateamappdate': '2025-05-06', 
+          'achiefappdate': '2025-05-07', 
         });
 
         await db.insert('approval', {
@@ -60,8 +60,8 @@ class DatabaseHandler {
           'asoojoo': 0, 
           'astatus': '대기', 
           'adate': '2025-05-08', 
-          'ateamappdate': null, 
-          'achiefappdate': null, 
+          'ateamappdate': '2025-05-08', 
+          'achiefappdate': '2025-05-09', 
         });
 
         await db.insert('approval', {
@@ -72,7 +72,7 @@ class DatabaseHandler {
           'asoojoo': 0, 
           'astatus': '대기', 
           'adate': '2025-05-09', 
-          'ateamappdate': null, 
+          'ateamappdate': '2025-05-09', 
           'achiefappdate': null, 
         });
 
@@ -171,7 +171,7 @@ class DatabaseHandler {
           'oeid': 'h001', // 본사사원
           'ocount': 2,
           'odate': '2025-04-10',
-          'ostatus': '결제완료',
+          'ostatus': '수령',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -186,7 +186,7 @@ class DatabaseHandler {
           'oeid': 'h002', // 본사팀장
           'ocount': 1,
           'odate': '2025-04-25',
-          'ostatus': '결제완료',
+          'ostatus': '수령',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -202,7 +202,7 @@ class DatabaseHandler {
           'oeid': 'h001',
           'ocount': 3,
           'odate': '2025-05-06',
-          'ostatus': '결제완료',
+          'ostatus': '발송',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -217,7 +217,7 @@ class DatabaseHandler {
           'oeid': 'h003', // 본사임원
           'ocount': 1,
           'odate': '2025-05-07',
-          'ostatus': '결제완료',
+          'ostatus': '발송',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -637,7 +637,7 @@ Future<void> insertDefaultProductsIfEmpty() async {
     );
     return queryResult.map((e) => Orders.fromMap(e)).toList();
   }
-  
+
   // 주문된 상품 ID로 상품 정보 조회
   Future<Product?> getProductByPid(String pid) async {
     final Database db = await initializeDB();
@@ -676,23 +676,4 @@ Future<void> insertDefaultProductsIfEmpty() async {
     );
     return result.isNotEmpty;
   }
-
-  // 특정날짜 데이터가져오는 매서드추가 2025.4.10 이런식으로기입
-Future<List<Map<String, dynamic>>> getSalesByShop(String date) async {
-  final db = await initializeDB();
-  final result = await db.rawQuery('''
-    SELECT 
-      e.eid, 
-      e.ename, 
-      SUM(p.pprice * o.ocount) AS total 
-    FROM orders o 
-    JOIN product p ON o.opid = p.pid 
-    JOIN employee e ON o.oeid = e.eid 
-    WHERE o.odate = ? 
-    GROUP BY e.eid 
-    ORDER BY total DESC
-  ''', [date]);
-
-  return result;
-}
 }
