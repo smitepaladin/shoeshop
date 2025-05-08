@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:image_picker/image_picker.dart';
@@ -23,6 +23,7 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
 
   final ImagePicker picker = ImagePicker();
   XFile? selectedImage;
+  Uint8List? imageBytes;
 
   final List<String> brands = ['나이키', '아디다스', '뉴발란스', '푸마'];
   final List<String> sizes = ['230', '240', '250', '260', '270', 'Free'];
@@ -40,8 +41,10 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
   Future<void> pickImage() async {
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
+      final bytes = await image.readAsBytes();
       setState(() {
         selectedImage = image;
+        imageBytes = bytes;
       });
     }
   }
@@ -57,7 +60,7 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
         'pname': nameController.text,
         'pprice': int.tryParse(priceController.text) ?? 0,
         'pstock': int.tryParse(stockController.text) ?? 0,
-        'pimage': selectedImage?.path ?? '', // ✅ 경로 String 저장
+        'pimage': imageBytes,
         'pbrand': selectedBrand ?? '',
         'psize': selectedSize ?? '',
         'pcolor': selectedColor ?? '',
@@ -101,7 +104,6 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
               buildTextField(stockController, '재고 수량', isNumber: true),
               const SizedBox(height: 12),
 
-              // 브랜드 드롭다운
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: '브랜드명',
@@ -117,7 +119,6 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
               ),
               const SizedBox(height: 12),
 
-              // 사이즈 드롭다운
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: '사이즈',
@@ -133,7 +134,6 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
               ),
               const SizedBox(height: 12),
 
-              // 색상 드롭다운
               DropdownButtonFormField<String>(
                 decoration: const InputDecoration(
                   labelText: '색상',
@@ -149,7 +149,6 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
               ),
               const SizedBox(height: 12),
 
-              // 이미지 미리보기
               GestureDetector(
                 onTap: pickImage,
                 child: Container(
@@ -159,14 +158,13 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
                     color: Colors.grey[100],
                   ),
                   alignment: Alignment.center,
-                  child: selectedImage != null
-                      ? Image.file(File(selectedImage!.path), fit: BoxFit.cover)
+                  child: imageBytes != null
+                      ? Image.memory(imageBytes!, fit: BoxFit.cover)
                       : const Text('이미지를 선택하려면 탭하세요'),
                 ),
               ),
               const SizedBox(height: 20),
 
-              // 등록 버튼
               ElevatedButton(
                 onPressed: saveProduct,
                 child: const Text('상품 등록'),
@@ -199,5 +197,3 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
     );
   }
 }
-
-// 더미 //
