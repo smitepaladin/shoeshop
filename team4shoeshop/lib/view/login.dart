@@ -43,76 +43,118 @@ class _LoginState extends State<Login> {
     box.erase();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Log In')),
-      body: SingleChildScrollView(
-        scrollDirection: Axis.vertical,
-        child: Center(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(title: Text('Log In')),
+    body: SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 32.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('images/login.png'),
-                radius: 70,
+              Image.asset(
+                'images/bcdmart.png',
+                width: 160,
+                height: 160,
+                fit: BoxFit.cover,
               ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: userIdController,
-                  decoration: InputDecoration(labelText: '사용자 ID를 입력하세요'),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
-                  controller: passwordController,
-                  decoration: InputDecoration(labelText: '패스워드를 입력하세요'),
-                ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (userIdController.text.trim().isEmpty ||
-                      passwordController.text.trim().isEmpty) {
-                    errorSnackBar();
-                  } else {
-                    final handler = DatabaseHandler();
-                    bool loginSuccess = await handler.checkLogin(
-                      userIdController.text.trim(),
-                      passwordController.text.trim(),
-                    );
+              const SizedBox(height: 32),
 
-                    if (loginSuccess) {
-                      saveStorage();
-                      _showDialog(); // 로그인 성공 시 다이얼로그
+              TextField(
+                controller: userIdController,
+                decoration: InputDecoration(
+                  labelText: '사용자 ID를 입력하세요',
+                  prefixIcon: Icon(Icons.person_outline),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                ),
+              ),
+              const SizedBox(height: 20),
+
+              TextField(
+                controller: passwordController,
+                obscureText: true,
+                decoration: InputDecoration(
+                  labelText: '패스워드를 입력하세요',
+                  prefixIcon: Icon(Icons.lock_outline),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  filled: true,
+                  fillColor: Colors.grey[100],
+                ),
+              ),
+              const SizedBox(height: 30),
+
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    if (userIdController.text.trim().isEmpty ||
+                        passwordController.text.trim().isEmpty) {
+                      errorSnackBar();
                     } else {
-                      Get.snackbar(
-                        '로그인 실패',
-                        'ID 또는 비밀번호가 잘못되었습니다.',
-                        snackPosition: SnackPosition.TOP,
-                        backgroundColor: Colors.red,
-                        colorText: Colors.white,
+                      final handler = DatabaseHandler();
+                      bool loginSuccess = await handler.checkLogin(
+                        userIdController.text.trim(),
+                        passwordController.text.trim(),
                       );
+
+                      if (loginSuccess) {
+                        saveStorage();
+                        _showDialog();
+                      } else {
+                        Get.snackbar(
+                          '로그인 실패',
+                          'ID 또는 비밀번호가 잘못되었습니다.',
+                          snackPosition: SnackPosition.TOP,
+                          backgroundColor: Colors.red,
+                          colorText: Colors.white,
+                        );
+                      }
                     }
-                  }
-                },
-                child: Text('Log In'),
+                  },
+                  icon: Icon(Icons.login),
+                  label: Text('로그인', style: TextStyle(fontSize: 16)),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                ),
               ),
 
-              ElevatedButton(
-                onPressed: () => Get.to(Joincustomer()),
-                child: Text('회원가입'),
-              ),
-              ElevatedButton(
-                onPressed: () => Get.off(Adminlogin()),
-                child: Text('관리자 페이지'),
+              const SizedBox(height: 12),
+
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  OutlinedButton.icon(
+                    onPressed: () => Get.to(Joincustomer()),
+                    icon: Icon(Icons.person_add),
+                    label: Text('회원가입'),
+                  ),
+                  OutlinedButton.icon(
+                    onPressed: () => Get.off(Adminlogin()),
+                    icon: Icon(Icons.admin_panel_settings),
+                    label: Text('관리자 페이지'),
+                  ),
+                ],
               ),
             ],
           ),
         ),
       ),
-    );
-  } // build
+    ),
+  );
+}
+
 
   // --- Functions ---
   errorSnackBar() {

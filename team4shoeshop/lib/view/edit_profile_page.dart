@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/model/customer.dart';
@@ -14,10 +15,9 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  final box = GetStorage(); // 로그인 시 저장된 ID 읽기용
+  final box = GetStorage();
   final handler = DatabaseHandler();
 
-  // 사용자 정보 입력 필드
   late TextEditingController nameController;
   late TextEditingController passwordController;
   late TextEditingController phoneController;
@@ -36,18 +36,16 @@ class _EditProfilePageState extends State<EditProfilePage> {
   void initState() {
     super.initState();
 
-    // 텍스트 필드 초기화
     nameController = TextEditingController();
     passwordController = TextEditingController();
     phoneController = TextEditingController();
     emailController = TextEditingController();
-    addressController = TextEditingController(); // 최종 주소
-    detailAddressController = TextEditingController(); // 상세주소
+    addressController = TextEditingController();
+    detailAddressController = TextEditingController();
     cardNumController = TextEditingController();
     cardCvcController = TextEditingController();
     cardDateController = TextEditingController();
 
-    // 저장된 사용자 ID 불러오기
     userId = box.read('p_userId') ?? '';
     _loadProfile();
   }
@@ -73,9 +71,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
       phoneController.text = customer.cphone;
       emailController.text = customer.cemail;
       addressController.text = customer.caddress;
-      cardNumController.text = customer.ccardnum != 0 ? customer.ccardnum.toString() : '';
-      cardCvcController.text = customer.ccardcvc != 0 ? customer.ccardcvc.toString() : '';
-      cardDateController.text = customer.ccarddate != 0 ? customer.ccarddate.toString() : '';
+      cardNumController.text = customer.ccardnum != 0
+          ? formatCardNumber(customer.ccardnum.toString())
+          : '';
+      cardCvcController.text =
+          customer.ccardcvc != 0 ? customer.ccardcvc.toString() : '';
+      cardDateController.text =
+          customer.ccarddate != 0 ? customer.ccarddate.toString() : '';
     }
 
     setState(() {
@@ -106,6 +108,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
   Future<void> _updateProfile() async {
     final db = await handler.initializeDB();
 
+    final cardDateText = cardDateController.text.trim();
+    int cardDate = 0;
+
+    if (cardDateText.length == 4) {
+      final mm = int.tryParse(cardDateText.substring(2));
+      if (mm == null || mm < 1 || mm > 12) {
+        Get.snackbar('입력 오류', '유효기간의 MM은 01~12 사이여야 합니다.',
+            backgroundColor: Colors.red, colorText: Colors.white);
+        return;
+      }
+      cardDate = int.tryParse(cardDateText) ?? 0;
+    } else {
+      Get.snackbar('입력 오류', '유효기간은 YYMM 형식의 4자리 숫자여야 합니다.',
+          backgroundColor: Colors.red, colorText: Colors.white);
+      return;
+    }
+
     await db.update(
       'customer',
       {
@@ -114,9 +133,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
         'cphone': phoneController.text.trim(),
         'cemail': emailController.text.trim(),
         'caddress': addressController.text.trim(),
-        'ccardnum': int.tryParse(cardNumController.text.trim()) ?? 0,
+        'ccardnum': int.tryParse(cardNumController.text.replaceAll('-', '')) ?? 0,
         'ccardcvc': int.tryParse(cardCvcController.text.trim()) ?? 0,
-        'ccarddate': int.tryParse(cardDateController.text.trim()) ?? 0,
+        'ccarddate': cardDate,
       },
       where: 'cid = ?',
       whereArgs: [userId],
@@ -126,12 +145,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
       '수정 완료',
       '회원정보가 저장되었습니다.',
       snackPosition: SnackPosition.BOTTOM,
-      duration: Duration(seconds: 2),
+      duration: const Duration(seconds: 2),
     );
 
     await _loadProfile();
-    Future.delayed(Duration(seconds: 1), () {
-      Get.offAll(() => Shoeslistpage());
+    Future.delayed(const Duration(seconds: 1), () {
+      Get.offAll(() => const Shoeslistpage());
     });
   }
 
@@ -145,15 +164,29 @@ class _EditProfilePageState extends State<EditProfilePage> {
               padding: const EdgeInsets.all(16),
               child: ListView(
                 children: [
-                  TextField(controller: nameController, decoration: const InputDecoration(labelText: '이름')),
-                  TextField(controller: passwordController, decoration: const InputDecoration(labelText: '비밀번호')),
-                  TextField(controller: phoneController, decoration: const InputDecoration(labelText: '전화번호')),
-                  TextField(controller: emailController, decoration: const InputDecoration(labelText: '이메일')),
-                  const SizedBox(height: 8),
+                  _buildField(nameController, '이름'),
+                  _buildField(passwordController, '비밀번호', obscure: true),
+                  _buildField(
+                    phoneController,
+                    '전화번호',
+                    keyboard: TextInputType.number,
+                    formatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(11),
+                      PhoneNumberFormatter(),
+                    ],
+                  ),
+                  _buildField(emailController, '이메일'),
+                  const SizedBox(height: 16),
                   Row(
                     children: [
                       Expanded(
-                        child: Text(basicAddress.isNotEmpty ? basicAddress : '주소를 선택해주세요'),
+                        child: Text(
+                          basicAddress.isNotEmpty
+                              ? basicAddress
+                              : '주소를 선택해주세요',
+                          style: const TextStyle(fontSize: 14),
+                        ),
                       ),
                       TextButton(
                         onPressed: _searchAddress,
@@ -162,22 +195,39 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ],
                   ),
                   const SizedBox(height: 8),
-                  TextField(
-                    controller: detailAddressController,
-                    onChanged: (_) => _combineAddress(),
-                    decoration: const InputDecoration(labelText: '상세 주소'),
+                  _buildField(detailAddressController, '상세 주소',
+                      onChanged: (_) => _combineAddress()),
+                  _buildField(addressController, '최종 주소 (자동완성)', readOnly: true),
+                  const SizedBox(height: 16),
+                  _buildField(
+                    cardNumController,
+                    '카드번호',
+                    keyboard: TextInputType.number,
+                    formatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(16),
+                      CardNumberFormatter(),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  TextField(
-                    controller: addressController,
-                    readOnly: true,
-                    decoration: const InputDecoration(labelText: '최종 주소 (자동완성)'),
+                  _buildField(
+                    cardCvcController,
+                    'CVC',
+                    keyboard: TextInputType.number,
+                    formatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(3),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  TextField(controller: cardNumController, decoration: const InputDecoration(labelText: '카드번호')),
-                  TextField(controller: cardCvcController, decoration: const InputDecoration(labelText: 'CVC')),
-                  TextField(controller: cardDateController, decoration: const InputDecoration(labelText: '유효기간 (YYMM)')),
-                  const SizedBox(height: 20),
+                  _buildField(
+                    cardDateController,
+                    '유효기간 (YYMM)',
+                    keyboard: TextInputType.number,
+                    formatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(4),
+                    ],
+                  ),
+                  const SizedBox(height: 24),
                   ElevatedButton(
                     onPressed: _updateProfile,
                     child: const Text('수정 완료'),
@@ -187,6 +237,88 @@ class _EditProfilePageState extends State<EditProfilePage> {
             ),
     );
   }
+
+  Widget _buildField(
+    TextEditingController controller,
+    String label, {
+    bool obscure = false,
+    bool readOnly = false,
+    TextInputType keyboard = TextInputType.text,
+    List<TextInputFormatter>? formatters,
+    Function(String)? onChanged,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 6),
+      child: TextField(
+        controller: controller,
+        obscureText: obscure,
+        readOnly: readOnly,
+        keyboardType: keyboard,
+        inputFormatters: formatters,
+        onChanged: onChanged,
+        decoration: InputDecoration(
+          labelText: label,
+          border: const OutlineInputBorder(),
+          filled: true,
+          fillColor: Colors.grey[100],
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
+        ),
+      ),
+    );
+  }
+
+  String formatCardNumber(String number) {
+    number = number.replaceAll(RegExp(r'\D'), '');
+    final buffer = StringBuffer();
+    for (int i = 0; i < number.length; i++) {
+      buffer.write(number[i]);
+      if ((i + 1) % 4 == 0 && i + 1 != number.length) buffer.write('-');
+    }
+    return buffer.toString();
+  }
 }
 
+class PhoneNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    var digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final buffer = StringBuffer();
 
+    for (int i = 0; i < digits.length; i++) {
+      buffer.write(digits[i]);
+      if (i == 2 || i == 6) buffer.write('-');
+    }
+
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted.length > 13 ? formatted.substring(0, 13) : formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
+
+class CardNumberFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    var digits = newValue.text.replaceAll(RegExp(r'\D'), '');
+    final buffer = StringBuffer();
+
+    for (int i = 0; i < digits.length; i++) {
+      buffer.write(digits[i]);
+      if ((i + 1) % 4 == 0 && i + 1 != digits.length) buffer.write('-');
+    }
+
+    final formatted = buffer.toString();
+    return TextEditingValue(
+      text: formatted.length > 19 ? formatted.substring(0, 19) : formatted,
+      selection: TextSelection.collapsed(offset: formatted.length),
+    );
+  }
+}
