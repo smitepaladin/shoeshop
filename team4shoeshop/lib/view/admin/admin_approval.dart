@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/view/admin/admin_add_approval.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
@@ -14,7 +15,8 @@ class AdminApproval extends StatefulWidget {
 
 class _AdminApprovalState extends State<AdminApproval> {
   late DatabaseHandler handler;
-
+  final box = GetStorage();
+  
   @override
   void initState() {
     super.initState();
@@ -57,6 +59,7 @@ Widget build(BuildContext context) {
                     final approval = snapshot.data![index];
                     return Card(
                       margin: const EdgeInsets.all(8),
+                      color: snapshot.data![index].substring(0, 4)=='임원승인'?Colors.grey:Colors.blue[50],
                       child: Padding(
                         padding: const EdgeInsets.all(12),
                         child: Row(
@@ -71,6 +74,9 @@ Widget build(BuildContext context) {
                               onPressed: () {
                                 //
                               }, 
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: snapshot.data![index].substring(0, 4)=='임원승인'?Colors.grey:Colors.white
+                              ),
                               child: Text('결재'),
                             ),
                           ],
@@ -92,8 +98,8 @@ Widget build(BuildContext context) {
 
 Future<List<String>> getApproval() async {
   final Database db = await handler.initializeDB();
-  final result = await db.rawQuery('select a.astatus, p.pbrand, p.pname, p.pcolor, p.psize, a.abaljoo, a.adate from product p, approval a where a.apid=p.pid');
-  return result.map((e) => "${e['astatus']} | ${e['pbrand']} | ${e['pname']}\n${e['pcolor']} | ${e['psize']} | ${e['abaljoo']}\n${e['adate']}").toList();
+  final result = await db.rawQuery('select a.astatus, p.pbrand, p.pname, p.pcolor, p.psize, a.abaljoo, a.adate, a.aeid from product p, approval a where a.apid=p.pid order by adate');
+  return result.map((e) => "${e['astatus']} | ${e['pbrand']} | ${e['pname']}\n${e['pcolor']} | ${e['psize']} | ${e['abaljoo']}\n${e['adate']} | 작성자 : ${e['aeid']}").toList();
 }
 
 } // class

@@ -89,7 +89,7 @@ Widget build(BuildContext context) {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.fromLTRB(100, 20, 100, 20),
               child: TextField(
                 controller: controller,
                 keyboardType: TextInputType.number,
