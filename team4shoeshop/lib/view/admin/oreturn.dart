@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:team4shoeshop/view/admin/receive.dart';
+import 'package:team4shoeshop/view/adminlogin.dart';
+import 'package:team4shoeshop/view/login.dart';
+
 import '../../../vm/database_handler.dart';
 
 class OreturnPage extends StatefulWidget {
@@ -21,15 +25,28 @@ class _OreturnPageState extends State<OreturnPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title:   ListTile(
-            leading: Icon(Icons.shopping_bag),
-            title: Text('전체 재고 현황'),
-            onTap: () {
-              Get.back();
-            },
-          ),
+    appBar: AppBar(
+        title: Text('receivepage'),
       ),
+      drawer: Drawer(
+child: ListView(
+children: [
+DrawerHeader(child: Text('cba 신발 상점')),
+ListTile(
+title: Text('상품 수령 목록'),
+onTap: () => Get.to(() => ReceivePage()),
+),
+ListTile(
+title: Text('반품 처리 현황'),
+onTap: () => Get.to(() => OreturnPage()),
+),
+ListTile(
+title: Text('관리자 로그인페이지'),
+onTap: () => Get.to(() => Adminlogin()),
+),
+],
+),
+),
       body: FutureBuilder(
         future: fetchOrders(), //Db에서 받아오는정보들
         builder: (context, snapshot) {
