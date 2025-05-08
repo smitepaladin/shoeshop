@@ -49,7 +49,7 @@ class _TodayshopPageState extends State<TodayshopPage> {
               ),
               TextButton(
                 onPressed: () {
-                  selectedDate = '2025-04-09'; // 어제
+                  selectedDate = '2025-05-04'; // 어제
                   loadData();
                 },
                 child: Text('어제'),

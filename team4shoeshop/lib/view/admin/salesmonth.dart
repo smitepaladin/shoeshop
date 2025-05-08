@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:team4shoeshop/view/admin/todayshop.dart';
 
 import 'oreturn.dart';
 import 'receive.dart';
@@ -37,6 +38,10 @@ onTap: () => Get.to(() => SalesmonthPage()),
 ListTile(
 title: Text('반품 처리 현황'),
 onTap: () => Get.to(() => OreturnPage()),
+),
+ListTile(
+title: Text('반품 처리 현황'),
+onTap: () => Get.to(() => TodayshopPage()),
 ),
 ],
 ),
