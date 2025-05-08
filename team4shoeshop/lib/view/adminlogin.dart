@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/view/admin/admin_main.dart';
-import 'package:team4shoeshop/view/admin/receive.dart';
+import 'package:team4shoeshop/view/dealer/dealer_main.dart';
 import 'package:team4shoeshop/view/login.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
@@ -82,7 +82,7 @@ class _AdminloginState extends State<Adminlogin> {
               saveStorage();
 
               if (permission == 0) {
-                Get.off(() => ReceivePage());
+                Get.off(() => DealerMain());
               } else if (permission >= 1) {
                 Get.off(() => AdminMain());
               } else {
