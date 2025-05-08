@@ -132,7 +132,7 @@ class _BuyPageState extends State<BuyPage> {
             'opid': product.pid,
             'oeid': storeId,
             'ocount': quantity,
-            'odate': DateTime.now().toIso8601String(),
+            'odate': '${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}',
             'ostatus': '결제완료',
             'ocartbool': 0,
             'oreturncount': 0,
