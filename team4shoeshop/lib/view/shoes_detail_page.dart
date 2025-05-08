@@ -11,8 +11,13 @@ import 'edit_profile_page.dart';
 
 class ShoesDetailPage extends StatefulWidget {
   final Product product;
+  final int selectedSize;
 
-  const ShoesDetailPage({required this.product, super.key});
+  const ShoesDetailPage({
+    required this.product,
+    required this.selectedSize,
+    super.key,
+  });
 
   @override
   State<ShoesDetailPage> createState() => _ShoesDetailPageState();
@@ -114,6 +119,7 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
       'product': widget.product,
       'quantity': selectedQuantity,
       'storeId': selectedStoreId,
+      'selectedSize': widget.selectedSize,
     });
   }
 
@@ -156,7 +162,7 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
                   _buildInfoRow('상품명', widget.product.pname),
                   _buildInfoRow('브랜드', widget.product.pbrand),
                   _buildInfoRow('색깔', widget.product.pcolor),
-                  _buildInfoRow('SIZE', '${widget.product.psize}'),
+                  _buildInfoRow('SIZE', '${widget.selectedSize}'),
                   _buildDropdownRow('수량', selectedQuantity, widget.product.pstock, (value) {
                     setState(() {
                       selectedQuantity = value;
