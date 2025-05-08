@@ -171,7 +171,7 @@ class DatabaseHandler {
           'oeid': 'h001', // 본사사원
           'ocount': 2,
           'odate': '2025-04-10',
-          'ostatus': '수령',
+          'ostatus': '결제완료',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -186,7 +186,7 @@ class DatabaseHandler {
           'oeid': 'h002', // 본사팀장
           'ocount': 1,
           'odate': '2025-04-25',
-          'ostatus': '수령',
+          'ostatus': '결제완료',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -202,7 +202,7 @@ class DatabaseHandler {
           'oeid': 'h001',
           'ocount': 3,
           'odate': '2025-05-06',
-          'ostatus': '발송',
+          'ostatus': '결제완료',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
@@ -217,7 +217,7 @@ class DatabaseHandler {
           'oeid': 'h003', // 본사임원
           'ocount': 1,
           'odate': '2025-05-07',
-          'ostatus': '발송',
+          'ostatus': '결제완료',
           'ocartbool': 0,
           'oreturncount': 0,
           'oreturndate': '',
