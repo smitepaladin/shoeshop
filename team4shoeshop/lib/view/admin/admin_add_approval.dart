@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:team4shoeshop/view/admin/admin_add_approval.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
-class AdminApproval extends StatefulWidget {
-  const AdminApproval({super.key});
+class AdminAddApproval extends StatefulWidget {
+  const AdminAddApproval({super.key});
 
   @override
-  State<AdminApproval> createState() => _AdminApprovalState();
+  State<AdminAddApproval> createState() => _AdminAddApprovalState();
 }
 
-class _AdminApprovalState extends State<AdminApproval> {
+class _AdminAddApprovalState extends State<AdminAddApproval> {
   late DatabaseHandler handler;
 
   @override
@@ -27,17 +26,11 @@ Widget build(BuildContext context) {
     backgroundColor: Colors.white,
     appBar: AppBar(
       title: Text(
-          '품의 및 결재',
+          '품의서',
           style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
-        actions: [
-          IconButton(
-            onPressed: () => Get.off(AdminAddApproval()), 
-            icon: Icon(Icons.add),
-          ),
-        ],
     ),
     drawer: AdminDrawer(),
     body: Column(

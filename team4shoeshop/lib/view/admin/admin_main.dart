@@ -28,6 +28,14 @@ class _AdminMainState extends State<AdminMain> {
     return Scaffold(
       backgroundColor: Colors.white,
       drawer: AdminDrawer(),
+          appBar: AppBar(
+      title: Text(
+          '매장 통합 관리 시스템',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 30),
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+    ),
       body: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
@@ -36,17 +44,6 @@ Container(
   child: Column(
     crossAxisAlignment: CrossAxisAlignment.center,
     children: [
-      // 상단 제목 텍스트
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-        child: Text(
-          '매장 통합 관리 시스템',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
-          ),
-        ),
-      ),
       // 중앙 콘텐츠
       Padding(
         padding: const EdgeInsets.fromLTRB(0, 20, 0, 60),
