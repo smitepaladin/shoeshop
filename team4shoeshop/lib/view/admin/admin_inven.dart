@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
-import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
+import 'package:get/get.dart';
+import 'package:team4shoeshop/model/product.dart';
+import 'package:team4shoeshop/view/admin/admin_approval.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
+import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
 
 class AdminInven extends StatefulWidget {
   const AdminInven({super.key});
@@ -19,160 +21,98 @@ class _AdminInvenState extends State<AdminInven> {
     handler = DatabaseHandler();
   }
 
+  // SQLite에서 상품 목록을 재고량 기준으로 오름차순 정렬해 불러오는 비동기 함수
+  Future<List<Product>> fetchInventory() async {
+    final db = await handler.initializeDB(); 
+    final List<Map<String, dynamic>> products = await db.query(
+      'product',
+      orderBy: 'pstock', // 재고량 기준 오름차순 정렬
+    );
+    return products.map((map) => Product.fromMap(map)).toList();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: AdminDrawer(),
-      body: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-Container(
-  color: Colors.white,
-  child: Column(
-    crossAxisAlignment: CrossAxisAlignment.center,
-    children: [
-      // 상단 제목 텍스트
-      Padding(
-        padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
-        child: Text(
-          '매장 통합 관리 시스템',
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontSize: 30,
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              Get.to(AdminApproval());
+            }, 
+            icon: Icon(Icons.approval)
           ),
-        ),
-      ),
-      // 중앙 콘텐츠
-      Padding(
-        padding: const EdgeInsets.fromLTRB(0, 20, 0, 60),
-        child: SizedBox(
-          child: Center(
-            child: Container(
-              height: 80,
-              width: 300,
-              color: Colors.blue[100],
-              child: Center(
-                child: FutureBuilder<int>(
-                  future: getLowStockCount(),
-                  builder: (context, snapshot) {
-                    return Text(
-                      snapshot.hasData
-                        ? "재고가 30개 미만인 상품이 ${snapshot.data}개 있습니다."
-                        : "불러오는 중...",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      SizedBox(
-        child: Center(
-          child: Container(
-            height: 80,
-            width: 300,
-            color: Colors.blue[100],
-            child: Center(
-              child: FutureBuilder<List<int>>(
-                future: Future.wait([
-                  getTodaySales(),
-                  getYesterdaySales(),
-                ]),
-                builder: (context, snapshot) {
-                  return Text(
-                    snapshot.hasData
-                      ? "전일 매출은 ${snapshot.data![1]}원 입니다.\n금일 매출은 ${snapshot.data![0]}원 입니다."
-                      : "불러오는 중...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.fromLTRB(0, 60, 0, 60),
-        child: SizedBox(
-          child: Center(
-            child: Container(
-              height: 80,
-              width: 300,
-              color: Colors.blue[100],
-              child: Center(
-                child: FutureBuilder<int>(
-                  future: getLowStockCount(),
-                  builder: (context, snapshot) {
-                    return Text(
-                      snapshot.hasData
-                        ? "결재할 문서가 건 있습니다."
-                        : "불러오는 중...",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(fontSize: 16),
-                    );
-                  },
-                ),
-              ),
-            ),
-          ),
-        ),
-      ),
-      SizedBox(
-        child: Center(
-          child: Container(
-            height: 80,
-            width: 300,
-            color: Colors.blue[100],
-            child: Center(
-              child: FutureBuilder<int>(
-                future: getLowStockCount(),
-                builder: (context, snapshot) {
-                  return Text(
-                    snapshot.hasData
-                      ? "반품 접수가 건 있습니다."
-                      : "불러오는 중...",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: 16),
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
-    ],
-  ),
-),
         ],
+        title: const Text('전체 상품 재고 현황'), 
+      ),
+      drawer: AdminDrawer(), 
+      body: FutureBuilder<List<Product>>( 
+        future: fetchInventory(), // 불러올 함수 지정
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          // 데이터가 로딩되었으면 리스트 생성
+          final products = snapshot.data!;
+          
+          return ListView.builder(
+            itemCount: products.length,
+            itemBuilder: (context, index) {
+              final product = products[index];
+              // 재고 수량이 30개 이하인 경우 위험 표시용 플래그
+              final isLowStock = product.pstock <= 30;
+
+              return Card(
+                // 재고 적은 상품은 배경을 붉은색으로 표시
+                color: isLowStock ? Colors.redAccent : Colors.white10,
+                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                child: Padding(
+                  padding: const EdgeInsets.all(16),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // 상단: 브랜드명과 재고 수량 표시 (오른쪽 정렬)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            product.pbrand, // 브랜드명
+                            style: const TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: isLowStock ? Colors.red[100] : Colors.grey[200],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              '재고: ${product.pstock}개', // 재고 수량
+                              style: TextStyle(
+                                color: isLowStock ? Colors.black : Colors.blue,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(height: 5),
+                      // 상품명, 색상, 사이즈 정보 출력
+                      Text('상품명: ${product.pname}'),
+                      SizedBox(height: 3),
+                      Text('색상: ${product.pcolor}'),
+                      SizedBox(height: 3),
+                      Text('사이즈: ${product.psize}'),
+                    ],
+                  ),
+                ),
+              );
+            },
+          );
+        },
       ),
     );
-  } // build
-
-Future<int> getLowStockCount() async {
-  final Database db = await handler.initializeDB();
-  final result = await db.rawQuery('select count(*) from product where pstock < 30');
-  return Sqflite.firstIntValue(result) ?? 0;
+  }
 }
-
-Future<int> getTodaySales() async {
-  final Database db = await handler.initializeDB();
-  final String today = "${DateTime.now().year}-${DateTime.now().month.toString().padLeft(2, '0')}-${DateTime.now().day.toString().padLeft(2, '0')}";
-
-  final result = await db.rawQuery('select sum(p.pprice*o.ocount) from product p, orders o where o.opid=p.pid and o.oreturncount=0 and o.odate=?',[today]);
-  return Sqflite.firstIntValue(result) ?? 0;
-}
-
-Future<int> getYesterdaySales() async {
-  final Database db = await handler.initializeDB();
-  final DateTime yesterday = DateTime.now().subtract(Duration(days: 1));
-  final String yesterdayString = "${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}";
-
-  final result = await db.rawQuery('select sum(p.pprice*o.ocount) from product p, orders o where o.opid=p.pid and o.odate=?',[yesterdayString]);
-  return Sqflite.firstIntValue(result) ?? 0;
-}
-} // class
