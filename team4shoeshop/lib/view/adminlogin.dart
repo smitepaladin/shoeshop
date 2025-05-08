@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/view/admin/admin_main.dart';
 import 'package:team4shoeshop/view/login.dart';
+import 'package:team4shoeshop/vm/database_handler.dart';
+import 'package:team4shoeshop/model/employee.dart';
 
 class Adminlogin extends StatefulWidget {
   const Adminlogin({super.key});
@@ -12,9 +14,10 @@ class Adminlogin extends StatefulWidget {
 }
 
 class _AdminloginState extends State<Adminlogin> {
-    // Property
+  // Property
   late TextEditingController adminIdController;
   late TextEditingController adminpasswordController;
+  late DatabaseHandler handler;
 
   final box = GetStorage();
 
@@ -23,6 +26,7 @@ class _AdminloginState extends State<Adminlogin> {
     super.initState();
     adminIdController = TextEditingController();
     adminpasswordController = TextEditingController();
+    handler = DatabaseHandler();
     // 초기화
     initStorage();
   }
@@ -41,9 +45,26 @@ class _AdminloginState extends State<Adminlogin> {
   disposeStorage(){
     box.erase();
   }
+
+  Future<bool> validateAdmin(String id, String password) async {
+    final db = await handler.initializeDB();
+    final result = await db.query(
+      'employee',
+      where: 'eid = ? AND epassword = ?',
+      whereArgs: [id, password],
+    );
+    
+    if (result.isNotEmpty) {
+      final employee = Employee.fromMap(result.first); // 화면에 관리자 이름 권한 추가시 필요함
+      // 본사 직원(emp001, emp002, emp003) 또는 대리점 직원만 로그인 가능
+      return true;
+    }
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-  return Scaffold(
+    return Scaffold(
       appBar: AppBar(
         title: Text('Log In'),
       ),
@@ -69,17 +90,33 @@ class _AdminloginState extends State<Adminlogin> {
                 padding: const EdgeInsets.all(20.0),
                 child: TextField(
                   controller: adminpasswordController,
+                  obscureText: true,
                   decoration: InputDecoration(
                     labelText: '패스워드를 입력하세요'
                   ),
                 ),
               ),
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   if(adminIdController.text.trim().isEmpty || adminpasswordController.text.trim().isEmpty){
                     errorSnackBar();
-                  }else{
-                    _showDialog();
+                  } else {
+                    bool isValid = await validateAdmin(
+                      adminIdController.text.trim(),
+                      adminpasswordController.text.trim()
+                    );
+                    if (isValid) {
+                      _showDialog();
+                    } else {
+                      Get.snackbar(
+                        '로그인 실패',
+                        '아이디 또는 비밀번호가 올바르지 않습니다.',
+                        snackPosition: SnackPosition.TOP,
+                        duration: Duration(seconds: 2),
+                        colorText: Theme.of(context).colorScheme.onError,
+                        backgroundColor: Theme.of(context).colorScheme.error
+                      );
+                    }
                   }
                 }, 
                 child: Text('Log In'),
