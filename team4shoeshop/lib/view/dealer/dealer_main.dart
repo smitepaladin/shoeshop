@@ -14,12 +14,10 @@ class _DealerMainState extends State<DealerMain> {
   final box = GetStorage();
   final handler = DatabaseHandler();
   
-
   List<DailyRevenue> chartData = [];
   String districtName = '';
   int totalRevenue = 0;
  
-
   late final String currentYM;
 
   @override
@@ -54,19 +52,44 @@ class _DealerMainState extends State<DealerMain> {
     final String eid = box.read('adminId') ?? '';
 
     final result = await db.rawQuery('''
-      SELECT substr(o.odate, 1, 10) as date, SUM(p.pprice * o.ocount) as total
+      SELECT 
+        substr(o.odate, 1, 10) as date,
+        p.pname as product_name,
+        o.ocount as quantity,
+        p.pprice * o.ocount as total
       FROM orders o
       JOIN product p ON o.opid = p.pid
       WHERE o.oeid = ? AND o.ostatus = '결제완료'
         AND substr(o.odate, 1, 7) = ?
-      GROUP BY date
-      ORDER BY date
+      ORDER BY date, p.pname
     ''', [eid, currentYM]);
 
-    final List<DailyRevenue> newData = result.map((row) {
+    final Map<String, List<Map<String, dynamic>>> groupedData = {};
+    for (var row in result) {
+      final date = row['date']?.toString() ?? '';
+      if (!groupedData.containsKey(date)) {
+        groupedData[date] = [];
+      }
+      groupedData[date]!.add({
+        'product_name': row['product_name'],
+        'quantity': row['quantity'],
+        'total': row['total'],
+      });
+    }
+
+    final List<DailyRevenue> newData = groupedData.entries.map((entry) {
+      final dailyTotal = entry.value.fold<int>(
+        0,
+        (sum, item) => sum + (item['total'] as int),
+      );
       return DailyRevenue(
-        date: row['date']?.toString() ?? '',
-        amount: (row['total'] as int) ~/ 10000, // 만원 단위
+        date: entry.key,
+        amount: dailyTotal ~/ 10000, // 만원 단위
+        products: entry.value.map((item) => ProductSale(
+          name: item['product_name'] as String,
+          quantity: item['quantity'] as int,
+          total: item['total'] as int,
+        )).toList(),
       );
     }).toList();
 
@@ -114,10 +137,40 @@ class _DealerMainState extends State<DealerMain> {
                         final data = chartData[index];
                         return Card(
                           elevation: 2,
-                          child: ListTile(
-                            leading: const Icon(Icons.calendar_today),
-                            title: Text(data.date),
-                            trailing: Text('${data.amount} 만원'),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ListTile(
+                                leading: const Icon(Icons.calendar_today),
+                                title: Text(data.date),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: data.products.map((product) {
+                                    return Padding(
+                                      padding: const EdgeInsets.only(top: 8.0),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            child: Text(
+                                              '${product.name} (${product.quantity}개)',
+                                              style: TextStyle(fontSize: 14),
+                                            ),
+                                          ),
+                                          Text(
+                                            '${(product.total / 10000).toStringAsFixed(1)} 만원',
+                                            style: TextStyle(fontSize: 14),
+                                          ),
+                                        ],
+                                      ),
+                                    );
+                                  }).toList(),
+                                ),
+                              ),
+                            ],
                           ),
                         );
                       },
@@ -133,6 +186,23 @@ class _DealerMainState extends State<DealerMain> {
 class DailyRevenue {
   final String date;
   final int amount;
+  final List<ProductSale> products;
 
-  DailyRevenue({required this.date, required this.amount});
+  DailyRevenue({
+    required this.date,
+    required this.amount,
+    required this.products,
+  });
+}
+
+class ProductSale {
+  final String name;
+  final int quantity;
+  final int total;
+
+  ProductSale({
+    required this.name,
+    required this.quantity,
+    required this.total,
+  });
 }
