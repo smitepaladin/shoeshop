@@ -31,6 +31,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: const Login(), // 앱 시작 시 로그인 화면
+     
     );
   }
 }

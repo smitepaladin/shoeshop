@@ -4,6 +4,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:team4shoeshop/view/admin/admim_salastoday.dart';
 import 'package:team4shoeshop/view/admin/admin_approval.dart';
 import 'package:team4shoeshop/view/admin/admin_inven.dart';
 import 'package:team4shoeshop/view/admin/admin_main.dart';
@@ -48,7 +49,7 @@ class AdminDrawer extends StatelessWidget {
             leading: Icon(Icons.person_outline),
             title: Text('판매 현황 통계'),
             onTap: () {
-              Get.off(AdminSales());
+            Get.off(SalastodayPage());
             },
           ),
           ListTile(
@@ -69,14 +70,14 @@ class AdminDrawer extends StatelessWidget {
             leading: Icon(Icons.location_on),
             title: Text('일자별 매출 현황'),
             onTap: () {
-              //
+            //
             },
           ),
           ListTile(
             leading: Icon(Icons.assignment_return),
             title: Text('지점별 매출 현황'),
             onTap: () {
-              //
+            //
             },
           ),
           ListTile(
@@ -85,6 +86,7 @@ class AdminDrawer extends StatelessWidget {
             onTap: () {
               //
             },
+            
           ),
           ListTile(
             leading: Icon(Icons.logout),

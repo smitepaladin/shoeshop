@@ -81,10 +81,10 @@ class _AdminloginState extends State<Adminlogin> {
               Get.back();
               saveStorage();
 
-              if (permission == 1) {
-                Get.off(() => AdminMain());
-              } else if (permission >= 3) {
+              if (permission == 0) {
                 Get.off(() => ReceivePage());
+              } else if (permission >= 1) {
+                Get.off(() => AdminMain());
               } else {
                 Get.snackbar('오류', '알 수 없는 권한입니다.');
               }
