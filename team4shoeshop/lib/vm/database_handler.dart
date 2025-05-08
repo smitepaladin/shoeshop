@@ -667,6 +667,18 @@ Future<void> insertDefaultProductsIfEmpty() async {
     }, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
+
+  // 회원가입시 아이디 중복체크
+  Future<bool> isCidDuplicate(String cid) async {
+  final db = await initializeDB();
+  final result = await db.query(
+    'customer',
+    where: 'cid = ?',
+    whereArgs: [cid],
+  );
+  return result.isNotEmpty;
+  }
+
   // 로그인 확인용 메서드 추가
   Future<bool> checkLogin(String cid, String password) async {
     final db = await initializeDB();

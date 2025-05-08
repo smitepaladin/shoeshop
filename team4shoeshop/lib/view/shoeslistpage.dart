@@ -10,7 +10,6 @@ import 'package:team4shoeshop/view/shoes_detail_page.dart';
 import 'package:team4shoeshop/view/orderviewpage.dart';
 import 'cart.dart';
 
-// 다른 페이지에서도 사용용 가능한 Drawer 위젯
 class MainDrawer extends StatelessWidget {
   final box = GetStorage();
   MainDrawer({super.key});
@@ -18,69 +17,79 @@ class MainDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String userId = box.read('p_userId') ?? '';
+
     return Drawer(
-      child: ListView(
+      child: Column(
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(userId.isNotEmpty ? userId : '로그인 필요'),
+            accountName: Text(
+              userId.isNotEmpty ? userId : '로그인 필요',
+              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+            ),
             accountEmail: null,
-            currentAccountPicture: CircleAvatar(child: Icon(Icons.person)),
+            currentAccountPicture: const CircleAvatar(
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, size: 40, color: Colors.deepPurple),
+            ),
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.deepPurple, Colors.purpleAccent],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
           ),
-          ListTile(
-            leading: Icon(Icons.shopping_bag),
-            title: Text('상품 구매'),
-            onTap: () {
-              Get.back();
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.person_outline),
-            title: Text('회원정보 수정'),
-            onTap: () {
-              Get.to(() => EditProfilePage());
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.receipt_long),
-            title: Text('내 주문 내역'),
-            onTap: () {
-              Get.to(() => OrderViewPage());
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.shopping_cart),
-            title: Text('장바구니'),
-            onTap: () {
-              Get.to(() => CartPage());
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.location_on),
-            title: Text('위치 검색'),
-            onTap: () {
-              Get.to(() => LocationSearch());
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.assignment_return),
-            title: Text('반품 내역 확인'),
-            onTap: () {
-              Get.to(() => Returns());
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.logout),
-            title: Text('로그아웃'),
-            onTap: () {
-              box.erase();
-              Get.offAllNamed('/'); // 첫 화면으로 이동(로그인)
-            },
+          Expanded(
+            child: ListView(
+              children: [
+                _buildTile(context, Icons.shopping_bag, '상품 구매', () {
+                  Get.back();
+                }),
+                _buildTile(context, Icons.person_outline, '회원정보 수정', () {
+                  Get.to(() => EditProfilePage());
+                }),
+                _buildTile(context, Icons.receipt_long, '내 주문 내역', () {
+                  Get.to(() => OrderViewPage());
+                }),
+                _buildTile(context, Icons.shopping_cart, '장바구니', () {
+                  Get.to(() => CartPage());
+                }),
+                _buildTile(context, Icons.location_on, '위치 검색', () {
+                  Get.to(() => LocationSearch());
+                }),
+                _buildTile(context, Icons.assignment_return, '반품 내역 확인', () {
+                  Get.to(() => Returns());
+                }),
+                const Divider(height: 30),
+                _buildTile(context, Icons.logout, '로그아웃', () {
+                  box.erase();
+                  Get.offAllNamed('/');
+                }, iconColor: Colors.red),
+              ],
+            ),
           ),
         ],
       ),
     );
   }
+
+  Widget _buildTile(
+      BuildContext context, IconData icon, String title, VoidCallback onTap,
+      {Color? iconColor}) {
+    return ListTile(
+      leading: Icon(icon, color: iconColor ?? Theme.of(context).colorScheme.primary),
+      title: Text(title, style: const TextStyle(fontSize: 15)),
+      onTap: onTap,
+      horizontalTitleGap: 8.0,
+      dense: true,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(8),
+      ),
+      hoverColor: Colors.grey[200],
+    );
+  }
 }
+
 
 class Shoeslistpage extends StatefulWidget {
   const Shoeslistpage({super.key});
@@ -90,13 +99,13 @@ class Shoeslistpage extends StatefulWidget {
 }
 
 class _ShoeslistpageState extends State<Shoeslistpage> {
-  late DatabaseHandler handler; // 데이터베이스 핸들러
-  late List<Product> _products; // 전체 상품 목록
-  late List<Product> _filteredProducts; // 검색 필터링된 상품 목록
-  late String _searchText; // 검색어 텍스트
-  Map<String, int> selectedSizes = {}; // 제품별 선택된 사이즈 저장
+  late DatabaseHandler handler;
+  late List<Product> _products;
+  late List<Product> _filteredProducts;
+  late String _searchText;
+  Map<String, int> selectedSizes = {};
 
-  @override // 변수 초기화
+  @override
   void initState() {
     super.initState();
     handler = DatabaseHandler();
@@ -105,41 +114,31 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     _searchText = '';
   }
 
-  // 드롭다운에서 사용할 사이즈 옵션 리스트 함수
-  // 230~270까지 10단위로 5개 값 제공
-  List<int> getSizeOptions() {
-    return List.generate(5, (index) => 230 + (index * 10));
-  }
+  List<int> getSizeOptions() => List.generate(5, (index) => 230 + index * 10);
 
-  // 상품 카드 위젯 생성
   Widget _buildProductCard(Product product) {
-    // 10단위 사이즈 리스트 (getSizeOptions 함수 사용)
     final List<int> sizeOptions = getSizeOptions();
-    // product.psize가 10단위가 아니면 가장 가까운 10단위로 보정
     int defaultSize = ((product.psize / 10).round() * 10).clamp(230, 270);
     int selectedSize = selectedSizes[product.pid] ?? defaultSize;
-    // 만약 selectedSize가 옵션에 없다면, 가장 가까운 값으로 대체
-    if (!sizeOptions.contains(selectedSize)) {
-      selectedSize = defaultSize;
-    }
+    if (!sizeOptions.contains(selectedSize)) selectedSize = defaultSize;
+
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: BorderSide(color: Colors.black, width: 2),
+        side: const BorderSide(color: Colors.black, width: 2),
       ),
       child: InkWell(
         onTap: () {
           Get.to(() => ShoesDetailPage(
-            product: product,
-            selectedSize: selectedSize,
-          ));
+                product: product,
+                selectedSize: selectedSize,
+              ));
         },
         child: Padding(
-          padding: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // 이미지 영역을 더 크게 (flex: 7)
               Expanded(
                 flex: 7,
                 child: product.pimage.isNotEmpty
@@ -156,7 +155,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                           color: Colors.pink[100],
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: Center(
+                        child: const Center(
                           child: Text(
                             '신발\n이미지',
                             textAlign: TextAlign.center,
@@ -165,41 +164,26 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                         ),
                       ),
               ),
-              SizedBox(height: 8),
-              // 상품명, 가격, 색상
+              const SizedBox(height: 8),
               Expanded(
                 flex: 5,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      product.pname,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                    Text(
-                      '${product.pprice}원',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    Text(
-                      '색상: ${product.pcolor}',
-                      style: TextStyle(fontSize: 12),
-                    ),
-                    SizedBox(height: 2),
-                    // 드롭다운 최소화
+                    Text(product.pname,
+                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis),
+                    Text('${product.pprice}원',
+                        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                    Text('색상: ${product.pcolor}', style: const TextStyle(fontSize: 12)),
+                    const SizedBox(height: 2),
                     Row(
                       children: [
-                        Text('사이즈:', style: TextStyle(fontSize: 11)),
-                        SizedBox(width: 2),
+                        const Text('사이즈:', style: TextStyle(fontSize: 11)),
+                        const SizedBox(width: 2),
                         Container(
-                          padding: EdgeInsets.symmetric(horizontal: 2),
+                          padding: const EdgeInsets.symmetric(horizontal: 2),
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey, width: 0.7),
                             borderRadius: BorderRadius.circular(3),
@@ -208,14 +192,12 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                             value: selectedSize,
                             isDense: true,
                             iconSize: 16,
-                            style: TextStyle(fontSize: 11, color: Colors.black),
-                            underline: SizedBox(),
+                            style: const TextStyle(fontSize: 11, color: Colors.black),
+                            underline: const SizedBox(),
                             dropdownColor: Colors.white,
                             items: sizeOptions
-                                .map((size) => DropdownMenuItem(
-                                      value: size,
-                                      child: Text('$size'),
-                                    ))
+                                .map((size) =>
+                                    DropdownMenuItem(value: size, child: Text('$size')))
                                 .toList(),
                             onChanged: (value) {
                               if (value != null) {
@@ -238,33 +220,30 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     );
   }
 
-  // 드로우바 다른데서도 사용가능한 위젯으로 만듬 drawer: MainDrawer()
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.brown[50],
       drawer: MainDrawer(),
       appBar: AppBar(
-        title: Text('상품 구매 화면'),
+        title: const Text('상품 구매 화면'),
         centerTitle: true,
         actions: [
           IconButton(
-            icon: Icon(Icons.receipt_long),
+            icon: const Icon(Icons.receipt_long),
             tooltip: '주문내역',
-            onPressed: () {
-              Get.to(() => OrderViewPage());
-            },
+            onPressed: () => Get.to(() => OrderViewPage()),
           ),
         ],
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(12),
             child: TextField(
               decoration: InputDecoration(
                 hintText: '제품명 검색',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 filled: true,
                 fillColor: Colors.purple[50],
                 border: OutlineInputBorder(
@@ -274,10 +253,9 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
               ),
               onChanged: (query) {
                 _searchText = query;
-                _filteredProducts =
-                    _products
-                        .where((p) => p.pname.contains(_searchText))
-                        .toList();
+                _filteredProducts = _products
+                    .where((p) => p.pname.contains(_searchText))
+                    .toList();
                 setState(() {});
               },
             ),
@@ -286,32 +264,25 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
             child: FutureBuilder<List<Product>>(
               future: handler.getAllproducts(),
               builder: (context, snapshot) {
-                // 연결 중 상태이면 뱅글뱅글 돔
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
-                //스냅샷데이터 없거나 비어있으면 화면에 상품 없음 텍스트 등장
                 if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('상품이 없습니다.'));
+                  return const Center(child: Text('상품이 없습니다.'));
                 }
-                // 최초 데이터 세팅, 검색창 비어있음 모든 목록 검색어 있음 해당 검색어 있는 목록
                 if (_products.isEmpty) {
                   _products = snapshot.data!;
-                  _filteredProducts =
-                      _searchText.isEmpty
-                          ? _products
-                          : _products
-                              .where((p) => p.pname.contains(_searchText))
-                              .toList();
+                  _filteredProducts = _searchText.isEmpty
+                      ? _products
+                      : _products.where((p) => p.pname.contains(_searchText)).toList();
                 }
-                // 상품 이미지 그리드뷰
                 return GridView.builder(
-                  padding: EdgeInsets.all(12),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  padding: const EdgeInsets.all(12),
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 2,
                     mainAxisSpacing: 16,
                     crossAxisSpacing: 16,
-                    childAspectRatio: 0.68, // 이미지가 더 크게
+                    childAspectRatio: 0.68,
                   ),
                   itemCount: _filteredProducts.length,
                   itemBuilder: (context, index) {
@@ -326,4 +297,3 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     );
   }
 }
-// 더미 //

@@ -127,7 +127,7 @@ final filtered = allEmployees.where((e) =>
                     items: employees.map((e) {
                       return DropdownMenuItem(
                         value: e,
-                        child: Text("${e.ename} (${e.eid})"),
+                        child: Text(e.ename),
                       );
                     }).toList(),
                     onChanged: _onEmployeeSelected,
