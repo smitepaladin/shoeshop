@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/view/login.dart';
 import 'package:team4shoeshop/vm/database_handler.dart'; // ← DB 핸들러 경로 확인
 
 void main() async {
   // Flutter에서 async 초기화할 때 필수
   WidgetsFlutterBinding.ensureInitialized();
+  await GetStorage.init(); // 겟 스토리지 완전 초기화로 값 불러오기
 
   // DB 초기화 및 기본 상품 샘플 등록
   final handler = DatabaseHandler();

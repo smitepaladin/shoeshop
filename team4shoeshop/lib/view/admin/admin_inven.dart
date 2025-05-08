@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/model/product.dart';
 import 'package:team4shoeshop/view/admin/admin_approval.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
@@ -14,6 +15,7 @@ class AdminInven extends StatefulWidget {
 
 class _AdminInvenState extends State<AdminInven> {
   late DatabaseHandler handler;
+  final box = GetStorage();
 
   @override
   void initState() {
@@ -21,20 +23,14 @@ class _AdminInvenState extends State<AdminInven> {
     handler = DatabaseHandler();
   }
 
-  // SQLite에서 상품 목록을 재고량 기준으로 오름차순 정렬해 불러오는 비동기 함수
-  Future<List<Product>> fetchInventory() async {
-    final db = await handler.initializeDB(); 
-    final List<Map<String, dynamic>> products = await db.query(
-      'product',
-      orderBy: 'pstock', // 재고량 기준 오름차순 정렬
-    );
-    return products.map((map) => Product.fromMap(map)).toList();
-  }
-
   @override
   Widget build(BuildContext context) {
+    String adminId = box.read('adminId') ?? '_';
+    int adminPermission = box.read('adminPermission')?.toInt() ?? 0;
     return Scaffold(
       appBar: AppBar(
+        toolbarHeight: 80,
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
@@ -43,11 +39,16 @@ class _AdminInvenState extends State<AdminInven> {
             icon: Icon(Icons.approval)
           ),
         ],
-        title: const Text('전체 상품 재고 현황'), 
+        title: Column(
+          children: [
+            Text('전체 상품 재고 현황'),
+            Text('관리자 ID:$adminId, 권한 등급: $adminPermission', style: TextStyle(fontSize: 15),)
+          ],
+        ), 
       ),
       drawer: AdminDrawer(), 
       body: FutureBuilder<List<Product>>( 
-        future: fetchInventory(), // 불러올 함수 지정
+        future: handler.fetchInventory(), // DatabaseHandler의 메서드 사용
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());

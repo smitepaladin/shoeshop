@@ -15,19 +15,23 @@ import 'package:team4shoeshop/view/adminlogin.dart';
 class AdminDrawer extends StatelessWidget {
   final box = GetStorage();
   AdminDrawer({super.key});
-
+  
   @override
   Widget build(BuildContext context) {
-    String adminId = box.read('adminId') ?? '';
+    String adminName = box.read('adminName') ?? '로그인 필요';
     return Drawer(
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
           UserAccountsDrawerHeader(
-            accountName: Text(adminId.isNotEmpty ? adminId : '로그인 필요'),
-            accountEmail: null,
+            accountName: Text(adminName),
+            accountEmail: Text('관리자 전용'),
             currentAccountPicture: CircleAvatar(
-              child: Icon(Icons.person),
+              backgroundColor: Colors.white,
+              child: Icon(Icons.person, size: 40, color: Colors.blue),
+            ),
+            decoration: BoxDecoration(
+              color: Colors.blue,
             ),
           ),
           ListTile(
