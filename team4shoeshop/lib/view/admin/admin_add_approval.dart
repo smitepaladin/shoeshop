@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/approval.dart';
 import 'package:team4shoeshop/view/admin/admin_approval.dart';

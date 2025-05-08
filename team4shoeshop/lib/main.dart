@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:team4shoeshop/view/login.dart';
 import 'package:team4shoeshop/vm/database_handler.dart'; // ← DB 핸들러 경로 확인
 
@@ -10,6 +11,7 @@ void main() async {
   // DB 초기화 및 기본 상품 샘플 등록
   final handler = DatabaseHandler();
   await handler.initializeDB();
+  await GetStorage.init(); 
   await handler.insertDefaultProductsIfEmpty(); // 샘플 상품 자동 삽입
   await handler.insertDefaultEmployeesIfEmpty(); // 샘플 emplyee 데이터 삽입.
   await handler.insertDefaultFactoriesIfEmpty(); // 샘플 factory 데이터 삽입.
