@@ -14,13 +14,17 @@ class _AdminSalesState extends State<AdminSales> {
   late List<Map<String, dynamic>> shopSales = [];
   late String selectedDate;
 
-  @override
-  void initState() {
-    super.initState();
-    handler = DatabaseHandler();
-    selectedDate = '2025-05-08'; // 기본값: 오늘
-    loadData();
-  }
+ @override
+void initState() {
+  super.initState();
+  handler = DatabaseHandler();
+
+  final now = DateTime.now();
+  selectedDate = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
+  loadData();
+}
+
 
   Future<void> loadData() async {
     final result = await handler.getSalesByShop(selectedDate);
@@ -40,20 +44,22 @@ class _AdminSalesState extends State<AdminSales> {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              TextButton(
-                onPressed: () {
-                  selectedDate = '2025-05-08'; // 오늘
-                  loadData();
-                },
-                child: Text('오늘'),
-              ),
-              TextButton(
-                onPressed: () {
-                  selectedDate = '2025-04-10'; // 어제
-                  loadData();
-                },
-                child: Text('어제'),
-              ),
+            TextButton(
+  onPressed: () {
+    final now = DateTime.now();
+    selectedDate = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+    loadData();
+  },
+  child: Text('오늘'),
+),
+TextButton(
+  onPressed: () {
+    final yesterday = DateTime.now().subtract(Duration(days: 1));
+    selectedDate = "${yesterday.year}-${yesterday.month.toString().padLeft(2, '0')}-${yesterday.day.toString().padLeft(2, '0')}";
+    loadData();
+  },
+  child: Text('어제'),
+),
             ],
           ),
           Expanded(
