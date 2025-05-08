@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sqflite/sqflite.dart';
@@ -41,7 +43,11 @@ Widget build(BuildContext context) {
               if(adminPermission == 1){
                 Get.to(AdminAddApproval())?.then((value) => setState(() {}));
               }else{
-                Get.snackbar('권한 불일치', '권한이 없습니다.');
+                Get.snackbar(
+                  '권한 불일치', '권한이 없습니다.',
+                  duration: Duration(seconds: 2),
+                  backgroundColor: Colors.redAccent
+                );
               }
             }, 
             icon: Icon(Icons.add),
@@ -67,83 +73,111 @@ Widget build(BuildContext context) {
                     final parts = approval.split(' | ');
                     final aid = int.parse(parts[0].toString().substring(8));
                     final status = parts[1];
-                    return Card(
-                      margin: const EdgeInsets.all(8),
-                      color: status=='임원승인'?Colors.grey:Colors.blue[50],
-                      child: Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                approval,
-                                style: const TextStyle(fontSize: 16),
+                    return Slidable(
+                      endActionPane: ActionPane(
+                        motion: BehindMotion(), 
+                        children: [
+                          SlidableAction(
+                            backgroundColor: Colors.redAccent,
+                            icon: Icons.block,
+                            label: '반려',
+                            onPressed: (context) {
+                              final adminPermission = box.read('adminPermission');
+                              if(adminPermission==1){
+                                Get.snackbar(
+                                  '권한 불일치', '권한이 없습니다.',
+                                  duration: Duration(seconds: 2),
+                                  backgroundColor: Colors.redAccent
+                                );
+                              }else{
+                                selectDelete(aid);
+                              }
+                            }, 
+                          ),
+                        ],
+                      ),
+                      child: Card(
+                        margin: const EdgeInsets.all(8),
+                        color: status=='임원승인'?Colors.grey:Colors.blue[50],
+                        child: Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  approval,
+                                  style: const TextStyle(fontSize: 16),
+                                ),
                               ),
-                            ),
-                            ElevatedButton(
-                              onPressed: () {
-                                final adminPermission = box.read('adminPermission');
-                                if(status=='대기'){
-                                  if(adminPermission==2){
-                                    Get.defaultDialog(
-                                      title: '해당 건을 결재하시겠습니까?',
-                                      content: Row(
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () => Get.back(), 
-                                            child: Text('취소'),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async{
-                                              await update2Approval(aid);
-                                              setState(() {});
-                                              Get.back();
-                                            }, 
-                                            child: Text('결재'),
-                                          ),
-                                        ],
-                                      )
-                                    );
-                                  }else{
-                                    Get.snackbar('권한 불일치', '권한이 없습니다.');
+                              ElevatedButton(
+                                onPressed: () {
+                                  final adminPermission = box.read('adminPermission');
+                                  if(status=='대기'){
+                                    if(adminPermission==2){
+                                      Get.defaultDialog(
+                                        title: '해당 건을 결재하시겠습니까?',
+                                        content: Row(
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () => Get.back(), 
+                                              child: Text('취소'),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async{
+                                                await update2Approval(aid);
+                                                setState(() {});
+                                                Get.back();
+                                              }, 
+                                              child: Text('결재'),
+                                            ),
+                                          ],
+                                        )
+                                      );
+                                    }else{
+                                      Get.snackbar(
+                                        '권한 불일치', '권한이 없습니다.',
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Colors.redAccent
+                                      );
+                                    }
                                   }
-                                }
-                                if(status=='팀장승인'){
-                                  if(adminPermission==3){
-                                    Get.defaultDialog(
-                                      title: '해당 건을 결재하시겠습니까?',
-                                      content: Row(
-                                        children: [
-                                          ElevatedButton(
-                                            onPressed: () => Get.back(), 
-                                            child: Text('취소'),
-                                          ),
-                                          ElevatedButton(
-                                            onPressed: () async{
-                                              await updateApprovalAndStockWithErrorHandling(aid);
-                                              setState(() {});
-                                              Get.back();
-                                            }, 
-                                            child: Text('결재'),
-                                          ),
-                                        ],
-                                      )
-                                    );
-                                  }else{
-                                    Get.snackbar(
-                                      '권한 불일치', '권한이 없습니다.',
-                                      duration: Duration(seconds: 2),
-                                      backgroundColor: Colors.redAccent
-                                    );
+                                  if(status=='팀장승인'){
+                                    if(adminPermission==3){
+                                      Get.defaultDialog(
+                                        title: '해당 건을 결재하시겠습니까?',
+                                        content: Row(
+                                          children: [
+                                            ElevatedButton(
+                                              onPressed: () => Get.back(), 
+                                              child: Text('취소'),
+                                            ),
+                                            ElevatedButton(
+                                              onPressed: () async{
+                                                await updateApprovalAndStockWithErrorHandling(aid);
+                                                setState(() {});
+                                                Get.back();
+                                              }, 
+                                              child: Text('결재'),
+                                            ),
+                                          ],
+                                        )
+                                      );
+                                    }else{
+                                      Get.snackbar(
+                                        '권한 불일치', '권한이 없습니다.',
+                                        duration: Duration(seconds: 2),
+                                        backgroundColor: Colors.redAccent
+                                      );
+                                    }
                                   }
-                                }
-                              }, 
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: status=='임원승인'?Colors.grey:Colors.white
+                                }, 
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: status=='임원승인'?Colors.grey:Colors.white
+                                ),
+                                child: Text('결재'),
                               ),
-                              child: Text('결재'),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     );
@@ -160,10 +194,44 @@ Widget build(BuildContext context) {
   );
 } // build
 
+  selectDelete(aid){
+    showCupertinoModalPopup(
+      context: context, 
+      barrierDismissible: false,
+      builder: (context) => CupertinoActionSheet(
+        title: Text('경고',
+        style: TextStyle(
+          color: Colors.red
+        ),),
+        message: Text('선택한 항목을 삭제하시겠습니까?',
+        style: TextStyle(
+          color: Colors.red
+        ),),
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              deleteApproval(aid); // 리스트에서 삭제
+              setState(() {}); // 삭제된 거 화면에 반영
+              Get.back(); // 액션시트 치우기
+            }, 
+            child: Text('삭제',
+            style: TextStyle(
+              color: Colors.red
+            ),),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () => Get.back(), 
+          child: Text('취소'),
+        ),
+      ),
+    );
+  }
+
 Future<List<String>> getApproval() async {
   final Database db = await handler.initializeDB();
-  final result = await db.rawQuery('select a.aid, a.astatus, p.pbrand, p.pname, p.pcolor, p.psize, a.abaljoo, a.adate, a.aeid from product p, approval a where a.apid=p.pid order by aid');
-  return result.map((e) => "문서 번호 : ${e['aid']} | ${e['astatus']} | ${e['pbrand']}\n${e['pname']} | ${e['pcolor']} | ${e['psize']} | ${e['abaljoo']}\n${e['adate']} | 작성자 : ${e['aeid']}").toList();
+  final result = await db.rawQuery('select a.aid, a.astatus, p.pbrand, p.pname, p.pcolor, p.psize, a.abaljoo, a.adate, p.pstock from product p, approval a where a.apid=p.pid order by aid');
+  return result.map((e) => "문서 번호 : ${e['aid']} | ${e['astatus']} | ${e['pbrand']}\n${e['pname']} | ${e['pcolor']} | ${e['psize']} | ${e['abaljoo']}\n${e['adate']} | 현재 재고 : ${e['pstock']}").toList();
 }
 
     Future<int> update2Approval(int aid) async{
@@ -237,4 +305,10 @@ Future<List<String>> getApproval() async {
       throw Exception('Product 테이블 업데이트 실패');
     }
   }
+
+    Future<void> deleteApproval(aid) async{
+    final Database db = await handler.initializeDB();
+    await db.rawDelete('delete from approval where aid = ?', [aid]);
+  }
+  
 } // class
