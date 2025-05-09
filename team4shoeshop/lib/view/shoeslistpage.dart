@@ -125,7 +125,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(16),
-        side: const BorderSide(color: Colors.black, width: 2),
+        side: BorderSide(color: Colors.black, width: 2),
       ),
       child: InkWell(
         onTap: () {
@@ -135,7 +135,7 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
               ));
         },
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -155,61 +155,62 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                           color: Colors.pink[100],
                           borderRadius: BorderRadius.circular(12),
                         ),
-                        child: const Center(
+                        child: Center(
                           child: Text(
-                            '신발\n이미지',
+                            '신발\n사진',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 15),
+                            style: TextStyle(fontSize: 20),
                           ),
                         ),
                       ),
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: 8),
               Expanded(
                 flex: 5,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(product.pname,
-                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis),
                     Text('${product.pprice}원',
-                        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
-                    Text('색상: ${product.pcolor}', style: const TextStyle(fontSize: 12)),
-                    const SizedBox(height: 2),
-                    Row(
-                      children: [
-                        const Text('사이즈:', style: TextStyle(fontSize: 11)),
-                        const SizedBox(width: 2),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 2),
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey, width: 0.7),
-                            borderRadius: BorderRadius.circular(3),
-                          ),
-                          child: DropdownButton<int>(
-                            value: selectedSize,
-                            isDense: true,
-                            iconSize: 16,
-                            style: const TextStyle(fontSize: 11, color: Colors.black),
-                            underline: const SizedBox(),
-                            dropdownColor: Colors.white,
-                            items: sizeOptions
-                                .map((size) =>
-                                    DropdownMenuItem(value: size, child: Text('$size')))
-                                .toList(),
-                            onChanged: (value) {
-                              if (value != null) {
-                                setState(() {
-                                  selectedSizes[product.pid] = value;
-                                });
-                              }
-                            },
-                          ),
-                        ),
-                      ],
-                    ),
+                        style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                    Text('색상: ${product.pcolor}', style: TextStyle(fontSize: 12)),
+                    SizedBox(height: 2),
+                    Text('사이즈: ${product.psize}', style: TextStyle(fontSize: 12),)
+                    // Row(
+                    //   children: [
+                    //     const Text('사이즈:', style: TextStyle(fontSize: 11)),
+                    //     const SizedBox(width: 2),
+                    //     Container(
+                    //       padding: const EdgeInsets.symmetric(horizontal: 2),
+                    //       decoration: BoxDecoration(
+                    //         border: Border.all(color: Colors.grey, width: 0.7),
+                    //         borderRadius: BorderRadius.circular(3),
+                    //       ),
+                    //       child: DropdownButton<int>(
+                    //         value: selectedSize,
+                    //         isDense: true,
+                    //         iconSize: 16,
+                    //         style: const TextStyle(fontSize: 11, color: Colors.black),
+                    //         underline: const SizedBox(),
+                    //         dropdownColor: Colors.white,
+                    //         items: sizeOptions
+                    //             .map((size) =>
+                    //                 DropdownMenuItem(value: size, child: Text('$size')))
+                    //             .toList(),
+                    //         onChanged: (value) {
+                    //           if (value != null) {
+                    //             setState(() {
+                    //               selectedSizes[product.pid] = value;
+                    //             });
+                    //           }
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                   ],
                 ),
               ),
