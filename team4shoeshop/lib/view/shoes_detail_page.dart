@@ -131,7 +131,7 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
       return;
     }
 
-    Get.to(() => const BuyPage(), arguments: {
+    Get.to(() => BuyPage(), arguments: {
       'product': widget.product,
       'quantity': selectedQuantity,
       'storeId': selectedStoreId,
@@ -154,9 +154,9 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
         ],
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? Center(child: CircularProgressIndicator())
           : Padding(
-              padding: const EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(24.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
@@ -179,11 +179,10 @@ class _ShoesDetailPageState extends State<ShoesDetailPage> {
                   _buildInfoRow('상품명', widget.product.pname),
                   _buildInfoRow('브랜드', widget.product.pbrand),
                   _buildInfoRow('색깔', widget.product.pcolor),
-                  _buildInfoRow('SIZE', '${widget.selectedSize}'),
+                  _buildInfoRow('SIZE', '${widget.product.psize}'),
                   _buildDropdownRow('수량', selectedQuantity, widget.product.pstock, (value) {
-                    setState(() {
-                      selectedQuantity = value;
-                    });
+                  selectedQuantity = value;
+                    setState(() { });
                   }),
                   _buildStoreDropdown(),
                   _buildInfoRow('가격', '${widget.product.pprice}원'),
