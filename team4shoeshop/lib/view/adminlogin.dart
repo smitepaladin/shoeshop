@@ -94,72 +94,117 @@ class _AdminloginState extends State<Adminlogin> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Log In')),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: [
-              const SizedBox(height: 20),
-              const CircleAvatar(
-                backgroundImage: AssetImage('images/login.png'),
-                radius: 70,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    backgroundColor: Colors.grey[100],
+    appBar: AppBar(
+      title: const Text(
+        '관리자 로그인',
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
+      centerTitle: true,
+      backgroundColor: Colors.blue[700],
+    ),
+    body: SingleChildScrollView(
+      child: Center(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 40.0),
+          child: Container(
+            padding: const EdgeInsets.all(24),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(16),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black12,
+                  blurRadius: 10,
+                  offset: Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircleAvatar(
+                  backgroundImage: AssetImage('images/login.png'),
+                  radius: 60,
+                ),
+                const SizedBox(height: 30),
+                TextField(
                   controller: adminIdController,
-                  decoration: const InputDecoration(
-                    labelText: '관리자 ID를 입력하세요',
+                  decoration: InputDecoration(
+                    labelText: '관리자 ID',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.person),
                   ),
                 ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: TextField(
+                const SizedBox(height: 20),
+                TextField(
                   controller: adminpasswordController,
                   obscureText: true,
-                  decoration: const InputDecoration(
-                    labelText: '패스워드를 입력하세요',
+                  decoration: InputDecoration(
+                    labelText: '패스워드',
+                    border: OutlineInputBorder(),
+                    prefixIcon: Icon(Icons.lock),
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  if (adminIdController.text.trim().isEmpty || adminpasswordController.text.trim().isEmpty) {
-                    errorSnackBar();
-                  } else {
-                    final employee = await validateAdmin(
-                      adminIdController.text.trim(),
-                      adminpasswordController.text.trim(),
-                    );
-                    if (employee != null) {
-                      saveStorage(employee);
-                      _showDialog(employee);
-                    } else {
-                      Get.snackbar(
-                        '로그인 실패',
-                        '아이디 또는 비밀번호가 올바르지 않습니다.',
-                        snackPosition: SnackPosition.TOP,
-                        duration: const Duration(seconds: 2),
-                        colorText: Theme.of(context).colorScheme.onError,
-                        backgroundColor: Theme.of(context).colorScheme.error,
-                      );
-                    }
-                  }
-                },
-                child: const Text('Log In'),
-              ),
-              ElevatedButton(
-                onPressed: () => Get.off(() => const Login()),
-                child: const Text('고객 로그인'),
-              ),
-            ],
+                const SizedBox(height: 30),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (adminIdController.text.trim().isEmpty ||
+                          adminpasswordController.text.trim().isEmpty) {
+                        errorSnackBar();
+                      } else {
+                        final employee = await validateAdmin(
+                          adminIdController.text.trim(),
+                          adminpasswordController.text.trim(),
+                        );
+                        if (employee != null) {
+                          saveStorage(employee);
+                          _showDialog(employee);
+                        } else {
+                          Get.snackbar(
+                            '로그인 실패',
+                            '아이디 또는 비밀번호가 올바르지 않습니다.',
+                            snackPosition: SnackPosition.TOP,
+                            duration: const Duration(seconds: 2),
+                            colorText: Theme.of(context).colorScheme.onError,
+                            backgroundColor:
+                                Theme.of(context).colorScheme.error,
+                          );
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      backgroundColor: Colors.blue[700],
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text(
+                      'Log In',
+                      style: TextStyle(fontSize: 16, color: Colors.white),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 10),
+                TextButton(
+                  onPressed: () => Get.off(() => const Login()),
+                  child: const Text(
+                    '고객 로그인으로 돌아가기',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }

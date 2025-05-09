@@ -2,6 +2,7 @@
 2025.05.05 이학현 / admin 폴더, admin 로그인 후 넘어오는 메인 화면 생성
 */
 import 'package:flutter/material.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
@@ -16,6 +17,7 @@ class AdminMain extends StatefulWidget {
 
 class _AdminMainState extends State<AdminMain> {
   late DatabaseHandler handler;
+  final box = GetStorage();
 
   @override
   void initState() {
@@ -50,9 +52,12 @@ Container(
         child: SizedBox(
           child: Center(
             child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.blue[100]
+              ),
               height: 80,
               width: 300,
-              color: Colors.blue[100],
               child: Center(
                 child: FutureBuilder<int>(
                   future: getLowStockCount(),
@@ -74,9 +79,12 @@ Container(
       SizedBox(
         child: Center(
           child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.blue[100]
+              ),
             height: 80,
             width: 300,
-            color: Colors.blue[100],
             child: Center(
               child: FutureBuilder<List<int>>(
                 future: Future.wait([
@@ -102,9 +110,12 @@ Container(
         child: SizedBox(
           child: Center(
             child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.blue[100]
+              ),
               height: 80,
               width: 300,
-              color: Colors.blue[100],
               child: Center(
                 child: FutureBuilder<int>(
                   future: getapprovalCount(),
@@ -126,16 +137,19 @@ Container(
       SizedBox(
         child: Center(
           child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.blue[100]
+              ),
             height: 80,
             width: 300,
-            color: Colors.blue[100],
             child: Center(
               child: FutureBuilder<int>(
-                future: getLowStockCount(),
+                future: getReturnCount(),
                 builder: (context, snapshot) {
                   return Text(
                     snapshot.hasData
-                      ? "반품 접수가 건 있습니다."
+                      ? "반품 접수가 ${snapshot.data!}건 있습니다."
                       : "불러오는 중...",
                     textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 16),
@@ -179,8 +193,21 @@ Future<int> getYesterdaySales() async {
 
 Future<int> getapprovalCount() async {
   final Database db = await handler.initializeDB();
+  final adminPermission = box.read('adminPermission');
+  int count = 0;
+  if (adminPermission == 2) {
+    final result = await db.rawQuery('select count(*) from approval a where a.astatus = "대기"');
+    count = Sqflite.firstIntValue(result) ?? 0;
+  } else if (adminPermission == 3) {
+    final result = await db.rawQuery('select count(*) from approval a where a.astatus = "팀장승인"');
+    count = Sqflite.firstIntValue(result) ?? 0;
+  }
+  return count;
+}
 
-  final result = await db.rawQuery('select count(*) from approval a where a.astatus="대기" or a.astatus="팀장승인"');
+Future<int> getReturnCount() async {
+  final Database db = await handler.initializeDB();
+  final result = await db.rawQuery('select count(*) from orders where oreturnstatus = "요청"');
   return Sqflite.firstIntValue(result) ?? 0;
 }
 } // class

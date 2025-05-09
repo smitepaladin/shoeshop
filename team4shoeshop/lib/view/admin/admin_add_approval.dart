@@ -110,9 +110,8 @@ Widget build(BuildContext context) {
                     backgroundColor: Colors.redAccent);
                 }else{
                 insertAction();
-                Get.off(AdminApproval());
+                Navigator.pop(context);
                 Get.snackbar('전송 성공', '품의서를 전송했습니다');
-                setState(() {});
                 }
               }, 
               child: Text('전송'),

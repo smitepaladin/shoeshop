@@ -47,8 +47,8 @@ class AdminDrawer extends StatelessWidget {
             },
           ),
           ListTile(
-            leading: const Icon(Icons.bar_chart),
-            title: const Text('판매 현황 통계'),
+            leading: Icon(Icons.person_outline),
+            title: Text('지점별 전일 금일 매출'),
             onTap: () {
               Get.off(AdminSales());
             },
