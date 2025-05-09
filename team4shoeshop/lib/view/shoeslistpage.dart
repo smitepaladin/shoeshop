@@ -179,38 +179,6 @@ class _ShoeslistpageState extends State<Shoeslistpage> {
                     Text('색상: ${product.pcolor}', style: TextStyle(fontSize: 12)),
                     SizedBox(height: 2),
                     Text('사이즈: ${product.psize}', style: TextStyle(fontSize: 12),)
-                    // Row(
-                    //   children: [
-                    //     const Text('사이즈:', style: TextStyle(fontSize: 11)),
-                    //     const SizedBox(width: 2),
-                    //     Container(
-                    //       padding: const EdgeInsets.symmetric(horizontal: 2),
-                    //       decoration: BoxDecoration(
-                    //         border: Border.all(color: Colors.grey, width: 0.7),
-                    //         borderRadius: BorderRadius.circular(3),
-                    //       ),
-                    //       child: DropdownButton<int>(
-                    //         value: selectedSize,
-                    //         isDense: true,
-                    //         iconSize: 16,
-                    //         style: const TextStyle(fontSize: 11, color: Colors.black),
-                    //         underline: const SizedBox(),
-                    //         dropdownColor: Colors.white,
-                    //         items: sizeOptions
-                    //             .map((size) =>
-                    //                 DropdownMenuItem(value: size, child: Text('$size')))
-                    //             .toList(),
-                    //         onChanged: (value) {
-                    //           if (value != null) {
-                    //             setState(() {
-                    //               selectedSizes[product.pid] = value;
-                    //             });
-                    //           }
-                    //         },
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   ],
                 ),
               ),

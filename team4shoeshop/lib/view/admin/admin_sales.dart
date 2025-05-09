@@ -81,7 +81,7 @@ class _AdminSalesState extends State<AdminSales> {
   }
 
   Future<List<Map<String, dynamic>>> loadShopSalesForTwoDays() async {
-    final db = await handler.initializeDB();
+    // final db = await handler.initializeDB();
 
     final today = DateTime.now();
     final yesterday = today.subtract(Duration(days: 1));

@@ -46,7 +46,7 @@ Future<void> updateReturnInfo() async {
       'oreason': reasonController.text,
       'oreturnstatus': statusController.text,
       'odefectivereason': defectiveReasonController.text,
-      'oreturndate': formattedDate, // ✅ 저장 시 즉시 yyyy-MM-dd 형태로 입력
+      'oreturndate': formattedDate, // 저장 시 즉시 yyyy-MM-dd 형태로 입력
     },
     where: 'oid = ?',
     whereArgs: [widget.orderMap['oid']],

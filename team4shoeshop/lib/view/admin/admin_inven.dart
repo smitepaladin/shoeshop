@@ -61,7 +61,7 @@ class _AdminInvenState extends State<AdminInven> {
             itemBuilder: (context, index) {
               final product = products[index];
               // 재고 수량이 30개 이하인 경우 위험 표시용 플래그
-              final isLowStock = product.pstock <= 30;
+              final isLowStock = product.pstock < 30;
 
               return Card(
                 // 재고 적은 상품은 배경을 붉은색으로 표시

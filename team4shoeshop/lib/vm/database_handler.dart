@@ -1,4 +1,3 @@
-import 'dart:typed_data';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/customer.dart';
@@ -16,65 +15,65 @@ class DatabaseHandler {
           "create table approval(aid integer primary key autoincrement, aeid text, afid text, apid text, abaljoo integer, asoojoo integer, astatus text, adate text, ateamappdate text, achiefappdate text)",
         );
         // approval 초기데이터 상태 : 대기, 팀장승인, 임원승인
-        await db.insert('approval', {
-          'aeid': 'h001',
-          'afid': 'fac001', 
-          'apid': 'prd001', 
-          'abaljoo': 100, 
-          'asoojoo': 0, 
-          'astatus': '팀장승인', 
-          'adate': '2025-05-07', 
-          'ateamappdate': '2025-05-07', 
-          'achiefappdate': null, 
-        });
+        // await db.insert('approval', {
+        //   'aeid': 'h001',
+        //   'afid': 'fac001', 
+        //   'apid': 'prd001', 
+        //   'abaljoo': 100, 
+        //   'asoojoo': 0, 
+        //   'astatus': '팀장승인', 
+        //   'adate': '2025-05-07', 
+        //   'ateamappdate': '2025-05-07', 
+        //   'achiefappdate': null, 
+        // });
 
-        await db.insert('approval', {
-          'aeid': 'h001',
-          'afid': 'fac002', 
-          'apid': 'prd002', 
-          'abaljoo': 110, 
-          'asoojoo': 0, 
-          'astatus': '대기', 
-          'adate': '2025-05-06', 
-          'ateamappdate': null, 
-          'achiefappdate': null, 
-        });
+        // await db.insert('approval', {
+        //   'aeid': 'h001',
+        //   'afid': 'fac002', 
+        //   'apid': 'prd002', 
+        //   'abaljoo': 110, 
+        //   'asoojoo': 0, 
+        //   'astatus': '대기', 
+        //   'adate': '2025-05-06', 
+        //   'ateamappdate': null, 
+        //   'achiefappdate': null, 
+        // });
 
-        await db.insert('approval', {
-          'aeid': 'h001',
-          'afid': 'fac001', 
-          'apid': 'prd001', 
-          'abaljoo': 120, 
-          'asoojoo': 0, 
-          'astatus': '임원승인', 
-          'adate': '2025-05-07', 
-          'ateamappdate': '2025-05-07', 
-          'achiefappdate': '2025-05-08', 
-        });
+        // await db.insert('approval', {
+        //   'aeid': 'h001',
+        //   'afid': 'fac001', 
+        //   'apid': 'prd001', 
+        //   'abaljoo': 120, 
+        //   'asoojoo': 0, 
+        //   'astatus': '임원승인', 
+        //   'adate': '2025-05-07', 
+        //   'ateamappdate': '2025-05-07', 
+        //   'achiefappdate': '2025-05-08', 
+        // });
 
-        await db.insert('approval', {
-          'aeid': 'h001',
-          'afid': 'fac002', 
-          'apid': 'prd002', 
-          'abaljoo': 130, 
-          'asoojoo': 0, 
-          'astatus': '대기', 
-          'adate': '2025-05-08', 
-          'ateamappdate': null, 
-          'achiefappdate': null, 
-        });
+        // await db.insert('approval', {
+        //   'aeid': 'h001',
+        //   'afid': 'fac002', 
+        //   'apid': 'prd002', 
+        //   'abaljoo': 130, 
+        //   'asoojoo': 0, 
+        //   'astatus': '대기', 
+        //   'adate': '2025-05-08', 
+        //   'ateamappdate': null, 
+        //   'achiefappdate': null, 
+        // });
 
-        await db.insert('approval', {
-          'aeid': 'h001',
-          'afid': 'fac001', 
-          'apid': 'prd001', 
-          'abaljoo': 140, 
-          'asoojoo': 0, 
-          'astatus': '대기', 
-          'adate': '2025-05-09', 
-          'ateamappdate': null, 
-          'achiefappdate': null, 
-        });
+        // await db.insert('approval', {
+        //   'aeid': 'h001',
+        //   'afid': 'fac001', 
+        //   'apid': 'prd001', 
+        //   'abaljoo': 140, 
+        //   'asoojoo': 0, 
+        //   'astatus': '대기', 
+        //   'adate': '2025-05-09', 
+        //   'ateamappdate': null, 
+        //   'achiefappdate': null, 
+        // });
 
         // customer 테이블
         await db.execute(
@@ -82,17 +81,17 @@ class DatabaseHandler {
         );
 
         // customer 초기 데이터
-        await db.insert('customer', {
-          'cid': 'cust001',
-          'cname': '홍길동',
-          'cpassword': '1234',
-          'cphone': '01012345678',
-          'cemail': 'hong@example.com',
-          'caddress': '서울시 강남구',
-          'ccardnum': 1234567890123456,
-          'ccardcvc': 123,
-          'ccarddate': 2506,
-        });
+        // await db.insert('customer', {
+        //   'cid': 'cust001',
+        //   'cname': '홍길동',
+        //   'cpassword': '1234',
+        //   'cphone': '01012345678',
+        //   'cemail': 'hong@example.com',
+        //   'caddress': '서울시 강남구',
+        //   'ccardnum': 1234567890123456,
+        //   'ccardcvc': 123,
+        //   'ccarddate': 2506,
+        // });
 
         // employee 테이블
         // final String eid; // 직원 ID
@@ -158,119 +157,119 @@ class DatabaseHandler {
         // final String odefectivereason; // 제조사 규명 하자 내용
         // final String oreason; // 반품 이유
 
-        // ✅ orders 테이블 (order → orders)
+        // orders 테이블 (order → orders)
         await db.execute(
           "create table orders(oid integer primary key autoincrement, ocid text, opid text, oeid text, ocount integer, odate text, ostatus text, ocartbool integer, oreturncount integer, oreturndate text, oreturnstatus text, odefectivereason text, oreason text)",
         );
 
         // // order 초기 데이터
         // // 전월 주문 - 4월
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd001', // 에어맥스
-          'oeid': 'h001', // 본사사원
-          'ocount': 2,
-          'odate': '2025-04-10',
-          'ostatus': '결제완료',
-          'ocartbool': 0,
-          'oreturncount': 0,
-          'oreturndate': '',
-          'oreturnstatus': '',
-          'odefectivereason': '',
-          'oreason': '',
-        });
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd001', // 에어맥스
+        //   'oeid': 'd001',
+        //   'ocount': 2,
+        //   'odate': '2025-04-10',
+        //   'ostatus': '결제완료',
+        //   'ocartbool': 0,
+        //   'oreturncount': 0,
+        //   'oreturndate': '',
+        //   'oreturnstatus': '',
+        //   'odefectivereason': '',
+        //   'oreason': '',
+        // });
 
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd002', // 울트라부스트
-          'oeid': 'h002', // 본사팀장
-          'ocount': 1,
-          'odate': '2025-04-25',
-          'ostatus': '결제완료',
-          'ocartbool': 0,
-          'oreturncount': 0,
-          'oreturndate': '',
-          'oreturnstatus': '',
-          'odefectivereason': '',
-          'oreason': '',
-        });
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd002', // 울트라부스트
+        //   'oeid': 'd002',
+        //   'ocount': 1,
+        //   'odate': '2025-04-25',
+        //   'ostatus': '결제완료',
+        //   'ocartbool': 0,
+        //   'oreturncount': 0,
+        //   'oreturndate': '',
+        //   'oreturnstatus': '',
+        //   'odefectivereason': '',
+        //   'oreason': '',
+        // });
 
-        // 당월 주문 - 5월
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd001', // 990v5
-          'oeid': 'd001',
-          'ocount': 3,
-          'odate': '2025-04-10',
-          'ostatus': '결제완료',
-          'ocartbool': 0,
-          'oreturncount': 0,
-          'oreturndate': '',
-          'oreturnstatus': '',
-          'odefectivereason': '',
-          'oreason': '',
-        });
+        // // 당월 주문 - 5월
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd001', // 990v5
+        //   'oeid': 'd001',
+        //   'ocount': 3,
+        //   'odate': '2025-04-10',
+        //   'ostatus': '결제완료',
+        //   'ocartbool': 0,
+        //   'oreturncount': 0,
+        //   'oreturndate': '',
+        //   'oreturnstatus': '',
+        //   'odefectivereason': '',
+        //   'oreason': '',
+        // });
 
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd002', // 척테일러
-          'oeid': 'h003', // 본사임원
-          'ocount': 1,
-          'odate': '2025-05-07',
-          'ostatus': '결제완료',
-          'ocartbool': 0,
-          'oreturncount': 0,
-          'oreturndate': '',
-          'oreturnstatus': '',
-          'odefectivereason': '',
-          'oreason': '',
-        });
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd002', // 척테일러
+        //   'oeid': 'h003', // 본사임원
+        //   'ocount': 1,
+        //   'odate': '2025-05-07',
+        //   'ostatus': '결제완료',
+        //   'ocartbool': 0,
+        //   'oreturncount': 0,
+        //   'oreturndate': '',
+        //   'oreturnstatus': '',
+        //   'odefectivereason': '',
+        //   'oreason': '',
+        // });
 
-        // 반품 초기데이터
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd002', // 예: 나이키 에어맥스
-          'oeid': 'h002',
-          'ocount': 1,
-          'odate': '2025-05-01',
-          'ostatus': '반품완료',
-          'ocartbool': 0,
-          'oreturncount': 1,
-          'oreturndate': '2025-05-04',
-          'oreturnstatus': '완료',
-          'odefectivereason': '사이즈 불량',
-          'oreason': '사이즈가 맞지 않음',
-        });
+        // // 반품 초기데이터
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd002', // 예: 나이키 에어맥스
+        //   'oeid': 'h002',
+        //   'ocount': 1,
+        //   'odate': '2025-05-01',
+        //   'ostatus': '반품완료',
+        //   'ocartbool': 0,
+        //   'oreturncount': 1,
+        //   'oreturndate': '2025-05-04',
+        //   'oreturnstatus': '완료',
+        //   'odefectivereason': '사이즈 불량',
+        //   'oreason': '사이즈가 맞지 않음',
+        // });
 
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd001', // 예: 아디다스 슈퍼스타
-          'oeid': 'h001',
-          'ocount': 2,
-          'odate': '2025-04-28',
-          'ostatus': '반품요청',
-          'ocartbool': 0,
-          'oreturncount': 2,
-          'oreturndate': '2025-05-05',
-          'oreturnstatus': '요청',
-          'odefectivereason': '불량',
-          'oreason': '제품에 하자가 있음',
-        });
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd001', // 예: 아디다스 슈퍼스타
+        //   'oeid': 'h001',
+        //   'ocount': 2,
+        //   'odate': '2025-04-28',
+        //   'ostatus': '반품요청',
+        //   'ocartbool': 0,
+        //   'oreturncount': 2,
+        //   'oreturndate': '2025-05-05',
+        //   'oreturnstatus': '요청',
+        //   'odefectivereason': '불량',
+        //   'oreason': '제품에 하자가 있음',
+        // });
 
-        await db.insert('orders', {
-          'ocid': 'cust001',
-          'opid': 'prd001', // 예: 반스 올드스쿨
-          'oeid': 'h002',
-          'ocount': 1,
-          'odate': '2025-05-03',
-          'ostatus': '반품처리중',
-          'ocartbool': 0,
-          'oreturncount': 1,
-          'oreturndate': '2025-05-06',
-          'oreturnstatus': '처리중',
-          'odefectivereason': '변심',
-          'oreason': '디자인이 마음에 들지 않음',
-        });
+        // await db.insert('orders', {
+        //   'ocid': 'cust001',
+        //   'opid': 'prd001', // 예: 반스 올드스쿨
+        //   'oeid': 'h002',
+        //   'ocount': 1,
+        //   'odate': '2025-05-03',
+        //   'ostatus': '반품처리중',
+        //   'ocartbool': 0,
+        //   'oreturncount': 1,
+        //   'oreturndate': '2025-05-06',
+        //   'oreturnstatus': '처리중',
+        //   'odefectivereason': '변심',
+        //   'oreason': '디자인이 마음에 들지 않음',
+        // });
 
         // product 테이블
         // final int? id; // 신발 테이블 기본 id autoincrement
@@ -310,30 +309,30 @@ Future<void> insertDefaultProductsIfEmpty() async {
     return; // 아무것도 하지 않음
   }
 
-  Uint8List emptyImage = Uint8List(0);
+  // Uint8List emptyImage = Uint8List(0);
 
-  //이제 테이블이 비었을 경우에만 insert 수행
-  await db.insert('product', {
-    'pid': 'prd001',
-    'pbrand': '나이키',
-    'pname': '에어맥스',
-    'psize': 270,
-    'pcolor': '검정',
-    'pstock': 50,
-    'pprice': 129000,
-    'pimage': emptyImage,
-  });
+  // //이제 테이블이 비었을 경우에만 insert 수행
+  // await db.insert('product', {
+  //   'pid': 'prd001',
+  //   'pbrand': '나이키',
+  //   'pname': '에어맥스',
+  //   'psize': 270,
+  //   'pcolor': '검정',
+  //   'pstock': 50,
+  //   'pprice': 129000,
+  //   'pimage': emptyImage,
+  // });
 
-  await db.insert('product', {
-    'pid': 'prd002',
-    'pbrand': '아디다스',
-    'pname': '울트라부스트',
-    'psize': 265,
-    'pcolor': '흰색',
-    'pstock': 29,
-    'pprice': 139000,
-    'pimage': emptyImage,
-  });
+  // await db.insert('product', {
+  //   'pid': 'prd002',
+  //   'pbrand': '아디다스',
+  //   'pname': '울트라부스트',
+  //   'psize': 265,
+  //   'pcolor': '흰색',
+  //   'pstock': 29,
+  //   'pprice': 139000,
+  //   'pimage': emptyImage,
+  // });
 
   // await db.insert('product', {
   //   'pid': 'prd001',
@@ -609,25 +608,43 @@ Future<void> insertDefaultProductsIfEmpty() async {
     }
   }
 
-  // factory에 2개 데이터 넣기
-  Future<void> insertDefaultFactoriesIfEmpty() async {
-    final db = await initializeDB();
-    final existing = await db.query('factory');
+  // // factory에 2개 데이터 넣기
+  // Future<void> insertDefaultFactoriesIfEmpty() async {
+  //   final db = await initializeDB();
+  //   final existing = await db.query('factory');
 
-    if (existing.isEmpty) {
-      await db.insert('factory', {
-        'fid': 'f001',
-        'fbrand': '나이키',
-        'fphone': '02-1234-5678',
-      });
+  //   if (existing.isEmpty) {
+  //     await db.insert('factory', {
+  //       'fid': 'f001',
+  //       'fbrand': '나이키',
+  //       'fphone': '02-1234-5678',
+  //     });
 
-      await db.insert('factory', {
-        'fid': 'f002',
-        'fbrand': '아디다스',
-        'fphone': '02-8765-4321',
-      });
-    }
-  }
+  //     await db.insert('factory', {
+  //       'fid': 'f002',
+  //       'fbrand': '아디다스',
+  //       'fphone': '02-8765-4321',
+  //     });
+
+  //             await db.insert('factory', {
+  //         'fid': 'fac003',
+  //         'fbrand': '뉴발란스',
+  //         'fphone': '02-1111-0003',
+  //       });
+
+  //       await db.insert('factory', {
+  //         'fid': 'fac004',
+  //         'fbrand': '컨버스',
+  //         'fphone': '02-1111-0004',
+  //       });
+
+  //       await db.insert('factory', {
+  //         'fid': 'fac005',
+  //         'fbrand': '리복',
+  //         'fphone': '02-1111-0005',
+  //       });
+  //   }
+  // }
 
   // 결제 내역 페이지 (orders 테이블 조회)
   Future<List<Orders>> getAllorders() async {

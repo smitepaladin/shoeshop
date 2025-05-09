@@ -25,7 +25,7 @@ class _AdminProductInsertState extends State<AdminProductInsert> {
   XFile? selectedImage;
   Uint8List? imageBytes;
 
-  final List<String> brands = ['나이키', '아디다스', '뉴발란스', '푸마'];
+  final List<String> brands = ['나이키', '아디다스', '뉴발란스', '컨버스', '리복'];
   final List<String> sizes = ['230', '240', '250', '260', '270', 'Free'];
   final List<String> colors = ['블랙', '화이트', '레드', '블루', '그린', '옐로우'];
 

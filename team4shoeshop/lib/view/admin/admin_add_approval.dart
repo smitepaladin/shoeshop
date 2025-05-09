@@ -60,9 +60,7 @@ Widget build(BuildContext context) {
       ),
       drawer: AdminDrawer(),
     body: Center(
-    child: selectedProduct == null
-        ? Text('상품을 선택하세요')
-        : Column(
+    child: Column(
           children: [
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 10, 0, 80),
@@ -159,7 +157,7 @@ Widget build(BuildContext context) {
 
   insertAction()async{
     final String eid = box.read('adminId');
-    var approvalInsert = Approval(
+    Approval(
       aeid: eid, 
       afid: (await getFidByProductName(selectedProduct))!, 
       abaljoo: int.parse(controller.text), 
@@ -170,7 +168,7 @@ Widget build(BuildContext context) {
       achiefappdate: '', 
       apid: (await getPidByProductName(selectedProduct))!,
     );
-    int result = await insertApproval(approvalInsert);
+    // int result = await insertApproval(approvalInsert);
   }
 
   Future<String?> getPidByProductName(String pname) async {
