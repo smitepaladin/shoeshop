@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:team4shoeshop/model/approval.dart';
-import 'package:team4shoeshop/view/admin/admin_approval.dart';
 import 'package:team4shoeshop/view/admin/widget/admin_drawer.dart';
 import 'package:team4shoeshop/vm/database_handler.dart';
 
@@ -111,7 +110,10 @@ Widget build(BuildContext context) {
                 }else{
                 insertAction();
                 Navigator.pop(context);
-                Get.snackbar('전송 성공', '품의서를 전송했습니다');
+                Get.snackbar(
+                  '전송 성공', '품의서를 전송했습니다',
+                  backgroundColor: Colors.purple[100]
+                  );
                 }
               }, 
               child: Text('전송'),
@@ -182,7 +184,7 @@ Widget build(BuildContext context) {
   } else {
     return null;
   }
-}
+  }
 
   Future<String?> getFidByProductName(String pname) async {
   final db = await handler.initializeDB();
